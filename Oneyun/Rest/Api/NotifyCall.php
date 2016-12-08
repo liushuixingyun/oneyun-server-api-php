@@ -6,9 +6,9 @@ use Oneyun\Domain;
 use Oneyun\Version;
 use Oneyun\Common\Values;
 
-class IvrCall extends Version
+class NotifyCall extends Version
 {
-    //Ivr 呼出
+    //语音通知
     const  CALL_NOTIFY_CALL = "call/notify_call";
 
     function __construct(Domain $domain)
@@ -16,10 +16,15 @@ class IvrCall extends Version
         parent::__construct($domain);
     }
 
-    public function create($from = null,$to = null,$options = array()){
-        
+    public function create($to = null,$play_content = null,$options = array()){
+
         //初始化默认值
-        $notifyCall =  IvrCallOptions::create();
+        $notifyCall =  NotifyCallOptions::create();
+
+        //验证码提示音文件名 格式: 文件名1 | 文件名2
+        if(isset($options['play_file']) && is_array($options['play_file'])){
+            $options['play_file'] = implode("|",$options['play_file']);
+        }
 
         //合并数组
         $options = array_merge($notifyCall->getOptions(),$options);
@@ -29,11 +34,12 @@ class IvrCall extends Version
 
         //取值
         $data = Values::of(array(
-            'from' => $from,
+            'from' => $options['from'],
             'to' => $to,
             'repeat' => $options['repeat'],
             'max_dial_duration' => $options['max_dial_duration'],
-            'max_call_duration' => $options['max_call_duration'],
+            'play_file' => $options['play_file'],
+            'play_content' => $play_content,
             'user_data' => $options['user_data']
         ));
 

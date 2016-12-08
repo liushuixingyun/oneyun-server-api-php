@@ -1,5 +1,4 @@
 <?php
-
 namespace Oneyun\Rest;
 
 use Oneyun\Domain;
@@ -9,8 +8,8 @@ class Api extends Domain
     protected $_api;
 
     protected $_call;
-    protected $_voiceCall;
-    protected $_noticeCall;
+    protected $_verifyCall;
+    protected $_notifyCall;
     protected $_ivrCall;
 
     public function __construct(Client $client)
@@ -26,18 +25,18 @@ class Api extends Domain
         return $this->_call;
     }
 
-    protected function getVoiceCall()
+    protected function getVerifyCall()
     {
-        if (!$this->_voiceCall) {
-            $this->_voiceCall = new Api\voiceCall($this);
+        if (!$this->_verifyCall) {
+            $this->_verifyCall = new Api\VerifyCall($this);
         }
-        return $this->_voiceCall;
+        return $this->_verifyCall;
     }
 
-    protected function getNoticeCall()
+    protected function getNotifyCall()
     {
-        if (!$this->_noticeCall) {
-            $this->_noticeCall = new Api\NoticeCall($this);
+        if (!$this->_notifyCall) {
+            $this->_notifyCall = new Api\NotifyCal($this);
         }
         return $this->_noticeCall;
     }

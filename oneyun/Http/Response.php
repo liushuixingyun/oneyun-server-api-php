@@ -2,9 +2,9 @@
 namespace Oneyun\Http;
 
 class Response {
-    protected $headers;
-    protected $content;
-    protected $statusCode;
+    private $headers;
+    private $content;
+    private $statusCode;
 
     public function __construct($statusCode, $content, $headers = array()) {
         $this->statusCode = $statusCode;

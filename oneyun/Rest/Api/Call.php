@@ -1,9 +1,9 @@
 <?php
 namespace Oneyun\Rest\Api;
 
-use Oneyun\Values;
-use Oneyun\Domain;
 use Oneyun\Version;
+use Oneyun\Domain;
+use Oneyun\Common\Values;
 
 class Call extends Version
 {
@@ -15,6 +15,13 @@ class Call extends Version
         parent::__construct($domain);
     }
 
+    /**
+     *
+     * @param null $to1
+     * @param null $to2
+     * @param array $options
+     * @return array 返回结果
+     */
     public function create($to1 = null, $to2 = null, $options = array())
     {
 
@@ -42,11 +49,21 @@ class Call extends Version
             'user_data' => $options['user_data']
         ));
 
-        $this->request('POST',$this->getBaseUrl().self::CALL_URL ,array(),$data);
+        $response = $this->request('POST',$this->getBaseUrl().self::CALL_URL ,array(),$data);
 
+        return array(
+            'statusCode'=>$response->getStatusCode(),
+            'headers'=>$response->getHeaders(),
+            'content'=>$response->getContent()
+        );
     }
 
+    /**
+     *  取消语音回拨
+     * @param $callId
+     */
     public function cancel($callId){
+
 
     }
 }

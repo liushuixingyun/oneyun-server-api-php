@@ -2,7 +2,7 @@
 
 namespace Oneyun;
 
-use Oneyun\Exceptions as RestException, TwilioException;
+use Oneyun\Exceptions as RestException;
 use Oneyun\Http\Response;
 
 abstract class Version
@@ -31,20 +31,12 @@ abstract class Version
         $this->version = null;
     }
 
-    /**
-     *
-     */
     public function getBaseUrl()
     {
         return $this->getDomain()->getBaseUrl();
     }
 
 
-    /**
-     * Generate a domain relative uri from a version relative uri
-     * @param string $uri Version relative uri
-     * @return string Domain relative uri
-     */
     public function relativeUri($uri)
     {
         return trim($this->version, '/') . '' . trim($uri, '/');
@@ -66,17 +58,7 @@ abstract class Version
         );
     }
 
-    /**
-     * Create the best possible exception for the response.
-     *
-     * Attempts to parse the response for Twilio Standard error messages and use
-     * those to populate the exception, falls back to generic error message and
-     * HTTP status code.
-     *
-     * @param Response $response Error response
-     * @param string $header Header for exception message
-     * @return TwilioException
-     */
+
     protected function exception($response, $header)
     {
         $message = '[HTTP ' . $response->getStatusCode() . '] ' . $header;

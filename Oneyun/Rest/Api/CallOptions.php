@@ -1,13 +1,26 @@
 <?php
 namespace Oneyun\Rest\Api;
 
-use Oneyun\Options;
-use Oneyun\Values;
+use Oneyun\Common\Options;
+use Oneyun\Common\Values;
 
 abstract class CallOptions
 {
-
-    public static function create($from1 = null, $to1 = Values::NONE, $from2 = null, $to2 = Values::NONE, $ring_tone = null, $ring_tone_mode = 0, $max_dial_duration = 60, $max_call_duration = 3600, $recording = 0, $record_mode = 0, $user_data = '')
+    /**
+     * @param null $from1 defualt null
+     * @param string $to1
+     * @param null $from2 defualt null
+     * @param string $to2
+     * @param null $ring_tone defualt null
+     * @param int $ring_tone_mode defualt 3
+     * @param int $max_dial_duration defualt 45
+     * @param int $max_call_duration
+     * @param int $recording defualt false
+     * @param int $record_mode defualt 0
+     * @param string $user_data
+     * @return CreateCallOptions
+     */
+    public static function create($from1 = null, $to1 = Values::NONE, $from2 = null, $to2 = Values::NONE, $ring_tone = null, $ring_tone_mode = 3, $max_dial_duration = 45, $max_call_duration = 3600, $recording = false, $record_mode = 0, $user_data = '')
     {
         return new CreateCallOptions($from1, $to1, $from2, $to2, $ring_tone, $ring_tone_mode, $max_dial_duration, $max_call_duration, $recording, $record_mode, $user_data);
     }

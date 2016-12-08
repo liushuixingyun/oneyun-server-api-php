@@ -31,8 +31,7 @@ class CurlClient implements Client
                 //throw new EnvironmentException(curl_error($curl));
             }
 
-            print_r($response);
-            exit;
+
             $parts = explode("\r\n\r\n", $response, 3);
             list($head, $body) = ($parts[0] == 'HTTP/1.1 100 Continue')
                 ? array($parts[1], $parts[2])
@@ -55,6 +54,8 @@ class CurlClient implements Client
             }
 
             return new Response($statusCode, $body, $responseHeaders);
+
+
         } catch (\ErrorException $e) {
             if (isset($curl) && is_resource($curl)) {
                 curl_close($curl);

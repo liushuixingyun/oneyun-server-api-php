@@ -20,7 +20,6 @@ class Ivr
     //公共节点
     protected static $node = array('play', 'record', 'send_dtmf', 'get', 'hangup', 'dial', 'connect', 'next', 'playlist');
 
-
     /**
      *  初始化
      * Ivr constructor.

@@ -94,6 +94,9 @@ Class Client
             $headers,
             $timeout
         );
+
+
+
     }
 
     function __autoload($class)
@@ -104,11 +107,46 @@ Class Client
         }
     }
 
+    /**
+     * 语音回拨
+     * @return mixed
+     */
     protected function getCalls()
     {
         return $this->api->call;
     }
 
+    /**
+     * 语音验证码
+     * @return mixed
+     */
+    protected function getVerifyCall()
+    {
+        return $this->api->verifyCall;
+    }
+
+    /**
+     * 语音通知
+     * @return mixed
+     */
+    protected function getNotifyCall()
+    {
+        return $this->api->notifyCall;
+    }
+
+    /**
+     * IVR 呼出
+     * @return mixed
+     */
+    protected function getIvrCall()
+    {
+        return $this->api->ivrCall;
+    }
+
+
+    /**
+     * @return Api
+     */
     protected function getApi()
     {
         if (!$this->_api) {

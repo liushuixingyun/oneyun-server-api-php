@@ -18,6 +18,7 @@ abstract class Domain
     public function request($method = null, $uri = null, $params = array(), $data = array(),
                             $headers = array(), $timeout = null)
     {
+
         return $this->client->request(
             $method,
             $uri,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Oneyun;
+namespace Oneyun\Common;
 
 abstract class Options implements \IteratorAggregate
 {

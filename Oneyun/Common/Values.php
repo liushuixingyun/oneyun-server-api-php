@@ -1,5 +1,5 @@
 <?php
-namespace Oneyun;
+namespace Oneyun\Common;
 
 class Values implements \ArrayAccess
 {
