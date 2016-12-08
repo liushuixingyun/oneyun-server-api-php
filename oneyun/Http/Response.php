@@ -1,8 +1,5 @@
 <?php
-
-
 namespace Oneyun\Http;
-
 
 class Response {
     protected $headers;

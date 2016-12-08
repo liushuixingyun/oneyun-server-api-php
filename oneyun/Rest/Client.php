@@ -1,11 +1,9 @@
 <?php
 namespace Oneyun\Rest;
 
-use Oneyun\Exception;
 use Oneyun\Client as HttpClient;
 use Oneyun\Http\CurlClient;
-
-require 'Api.php';
+use Oneyun\Common\Encrypt;
 
 Class Client
 {
@@ -36,16 +34,67 @@ Class Client
         if ($secreKey) {
             $this->secreKey = $secreKey;
         }
-        if(!$this->appId || !$this->certId || !$this->apiUrl || !$this->secreKey ){
+        if (!$this->appId || !$this->certId || !$this->apiUrl || !$this->secreKey) {
             throw  new OneyunException('Credentials are required to create a Client');
         }
 
         if ($httpClient) {
             $this->httpClient = $httpClient;
+        } else {
+            $this->httpClient = new CurlClient();
         }
-
     }
 
+    /**
+     * Makes a request to the Twilio API using the configured http client
+     * Authentication information is automatically added if none is provided
+     *
+     * @param string $method HTTP Method
+     * @param string $uri Fully qualified url
+     * @param string[] $params Query string parameters
+     * @param string[] $data POST body data
+     * @param string[] $headers HTTP Headers
+     * @param int $timeout Timeout in seconds
+     * @return \Oneyun\Http\Response Response from the Twilio API
+     */
+    public function request($method = null, $uri = null, $params = array(), $data = array(), $headers = array(), $timeout = null)
+    {
+
+        //应用标识
+        $headers['AppID'] = $this->appId;
+
+        //密钥
+        $headers['CertID'] = $this->certId;
+
+        //当前时间
+        $headers['Timestamp'] = date('YmdHis', time());
+
+        //实体头
+        if ($method == 'POST' && !array_key_exists('Content-Type', $headers)) {
+            $headers['Content-Type'] = 'application/json; charset=utf-8';
+        }
+
+        //请求头
+        if (!array_key_exists('Accept', $headers)) {
+            $headers['Accept'] = 'application/json';
+        }
+
+        //签名加密
+        $signature = Encrypt::create('POST', json_encode($data), $headers['Content-Type'], $headers['Timestamp'], $this->appId, parse_url($uri, PHP_URL_PATH), $this->secreKey);
+
+        if (!array_key_exists('Signature', $headers)) {
+            $headers['Signature'] = $signature;
+        }
+
+        return $this->getHttpClient()->request(
+            $method,
+            $uri,
+            $params,
+            $data,
+            $headers,
+            $timeout
+        );
+    }
 
     function __autoload($class)
     {
@@ -54,16 +103,6 @@ Class Client
             require_once($file);
         }
     }
-
-
-    protected function getIvr()
-    {
-        if (!$this->_ivr) {
-            $this->_ivr = new Ivr();
-        }
-        return $this->_ivr;
-    }
-
 
     protected function getCalls()
     {
@@ -78,13 +117,26 @@ Class Client
         return $this->_api;
     }
 
+    public function getHttpClient()
+    {
+        return $this->httpClient;
+    }
+
+    /**
+     * @return Api 接口
+     */
+    public function getApiUrl()
+    {
+        return $this->apiUrl;
+    }
+
     public function __get($name)
     {
         $method = 'get' . ucfirst($name);
         if (method_exists($this, $method)) {
             return $this->$method();
         }
-        throw new OneyunException('Unknown domain ' . $name);
+        throw new Exception('Unknown domain ' . $name);
     }
 
 }

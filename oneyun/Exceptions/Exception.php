@@ -1,7 +1,7 @@
 <?php
+namespace Oneyun\Exception;
 
-namespace Oneyun;
-
-class OneyunException extends \Exception {
+class OneyunException extends \Exception
+{
 
 }

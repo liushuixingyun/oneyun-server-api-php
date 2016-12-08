@@ -1,24 +1,22 @@
 <?php
-
-
 namespace Oneyun\Http;
 
+use Oneyun\OneyunException;
 
-use Oneyun\OneyunException as EnvironmentException;
-
-class CurlClient implements Client {
+class CurlClient implements Client
+{
     const DEFAULT_TIMEOUT = 60;
     protected $curlOptions = array();
 
-    public function __construct(array $options = array()) {
+    public function __construct(array $options = array())
+    {
         $this->curlOptions = $options;
     }
 
     public function request($method, $url, $params = array(), $data = array(),
-                            $headers = array(), $user = null, $password = null,
-                            $timeout = null) {
-        $options = $this->options($method, $url, $params, $data, $headers,
-                                  $user, $password, $timeout);
+                            $headers = array(), $timeout = null)
+    {
+        $options = $this->options($method, $url, $params, $data, $headers, $timeout);
 
         try {
             if (!$curl = curl_init()) {
@@ -30,13 +28,15 @@ class CurlClient implements Client {
             }
 
             if (!$response = curl_exec($curl)) {
-                throw new EnvironmentException(curl_error($curl));
+                //throw new EnvironmentException(curl_error($curl));
             }
 
+            print_r($response);
+            exit;
             $parts = explode("\r\n\r\n", $response, 3);
             list($head, $body) = ($parts[0] == 'HTTP/1.1 100 Continue')
-                               ? array($parts[1], $parts[2])
-                               : array($parts[0], $parts[1]);
+                ? array($parts[1], $parts[2])
+                : array($parts[0], $parts[1]);
 
             $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
@@ -68,35 +68,49 @@ class CurlClient implements Client {
         }
     }
 
-    public function options($method, $url, $params = array(), $data = array(),
-                            $headers = array(), $user = null, $password = null,
-                            $timeout = null) {
+
+    /**
+     * @param $method
+     * @param $url
+     * @param array $params
+     * @param array $data
+     * @param array $headers
+     * @param null $timeout
+     * @return array
+     */
+    public function options($method, $uri, $params = array(), $data = array(),
+                            $headers = array(), $timeout = null)
+    {
+
 
         $timeout = is_null($timeout)
             ? self::DEFAULT_TIMEOUT
             : $timeout;
 
         $options = $this->curlOptions + array(
-            CURLOPT_URL => $url,
-            CURLOPT_HEADER => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_INFILESIZE => -1,
-            CURLOPT_HTTPHEADER => array(),
-            CURLOPT_TIMEOUT => $timeout,
-        );
+                //CURLOPT_URL => "http://101.200.73.13:8085/lps/ivr.php?step=lineup",
+                CURLOPT_URL => $uri,
+                CURLOPT_HEADER => true,
+                CURLOPT_SSL_VERIFYHOST => FALSE,
+                CURLOPT_SSL_VERIFYPEER => FALSE,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_INFILESIZE => -1,
+                CURLOPT_HTTPHEADER => array(),
+                CURLOPT_TIMEOUT => $timeout,
+            );
+
 
         foreach ($headers as $key => $value) {
             $options[CURLOPT_HTTPHEADER][] = "$key: $value";
         }
 
-        if ($user && $password) {
-            $options[CURLOPT_HTTPHEADER][] = 'Authorization: Basic ' . base64_encode("$user:$password");
-        }
 
-        $body = $this->buildQuery($params);
-        if ($body) {
-            $options[CURLOPT_URL] .= '?' . $body;
-        }
+        /* $body = $this->buildQuery($params);
+
+
+         if ($body) {
+             $options[CURLOPT_URL] .= '?' . $body;
+         }*/
 
         switch (strtolower(trim($method))) {
             case 'get':
@@ -104,8 +118,7 @@ class CurlClient implements Client {
                 break;
             case 'post':
                 $options[CURLOPT_POST] = true;
-                $options[CURLOPT_POSTFIELDS] = $this->buildQuery($data);
-
+                $options[CURLOPT_POSTFIELDS] = json_encode($data);
                 break;
             case 'put':
                 $options[CURLOPT_PUT] = true;
@@ -131,7 +144,8 @@ class CurlClient implements Client {
         return $options;
     }
 
-    public function buildQuery($params) {
+    public function buildQuery($params)
+    {
         $parts = array();
 
         $params = $params ?: array();

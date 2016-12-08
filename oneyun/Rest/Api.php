@@ -2,27 +2,26 @@
 
 namespace Oneyun\Rest;
 
-require 'Api/Call.php';
-require 'Api/IvrCall.php';
-require 'Api/NoticeCall.php';
-require 'Api/VoiceCall.php';
+use Oneyun\Domain;
 
-
-class Api
+class Api extends Domain
 {
-
     protected $_api;
 
-    private $_call;
+    protected $_call;
     protected $_voiceCall;
     protected $_noticeCall;
     protected $_ivrCall;
 
-
-    function getCall()
+    public function __construct(Client $client)
     {
-         if (!$this->_call) {
-            $this->_call = new Api\Call();
+        parent::__construct($client);
+    }
+
+    protected function getCall()
+    {
+        if (!$this->_call) {
+            $this->_call = new Api\Call($this);
         }
         return $this->_call;
     }
@@ -35,7 +34,7 @@ class Api
         return $this->_voiceCall;
     }
 
-    protected function  getNoticeCall()
+    protected function getNoticeCall()
     {
         if (!$this->_noticeCall) {
             $this->_noticeCall = new Api\NoticeCall($this);
@@ -51,8 +50,9 @@ class Api
         return $this->_ivrCall;
     }
 
-    function __get($name){
-        $method = "get". ucfirst($name);
+    function __get($name)
+    {
+        $method = "get" . ucfirst($name);
         if (method_exists($this, $method)) {
             return $this->$method();
         }

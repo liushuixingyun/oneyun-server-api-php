@@ -1,0 +1,6 @@
+vendor/*
+composer.lock
+package.xml
+*.tgz
+.idea
+index.php

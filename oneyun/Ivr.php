@@ -2,11 +2,6 @@
 
 namespace Oneyun;
 
-use Oneyun\Exceptions;
-
-require('Exceptions/Exception.php');
-
-
 class Ivr
 {
 
@@ -90,7 +85,7 @@ class Ivr
     {
         $this->Filter(self::$playAttr);
 
-        $child =$this->addAttribute($this->element->addChild($this->_verb));
+        $child = $this->addAttribute($this->element->addChild($this->_verb));
 
         if (is_array($this->_noun)) {
             foreach ($this->_noun as $value) {
@@ -143,7 +138,6 @@ class Ivr
         return new static($this->addChild());
     }
 
-
     /**
      * 创建hangup(挂断)节点
      * @return static
@@ -164,7 +158,7 @@ class Ivr
         ///过滤参数
         $this->Filter(self::$dailAttr);
 
-        $child =  $this->addAttribute($this->element->addChild($this->_verb));
+        $child = $this->addAttribute($this->element->addChild($this->_verb));
 
         //<number>
         if ($this->_noun) {
@@ -173,17 +167,17 @@ class Ivr
         //<connect>
         if (array_key_exists('connect', $params)) {
 
-            $this->Filter(self::$connectAttr,$params['connect']);
+            $this->Filter(self::$connectAttr, $params['connect']);
             $child = $this->addAttribute($child->addChild('connect'));
 
             //<play>
             $play = isset($params['connect']['play']) ? $params['connect']['play'] : '';
-            if($play){
+            if ($play) {
                 $noun = isset($play[0]) ? $play[0] : '';
                 $playAttr = isset($play[1]) ? $play[1] : array();
-                $this->Filter(self::$playAttr,$playAttr);
-                $play = $child->addChild('play',$noun);
-                $this->addAttribute($play,$playAttr);
+                $this->Filter(self::$playAttr, $playAttr);
+                $play = $child->addChild('play', $noun);
+                $this->addAttribute($play, $playAttr);
             }
         } else {
             $child->addChild('connect');
@@ -194,10 +188,8 @@ class Ivr
     /**
      * 创建connect
      */
-    protected function createConnect(){
-
-
-
+    protected function createConnect()
+    {
 
     }
 
@@ -254,7 +246,8 @@ class Ivr
      * 添加节点参数值
      * @return \SimpleXMLElement
      */
-    protected function addAttribute($child){
+    protected function addAttribute($child)
+    {
         if (is_array($this->_attrs)) {
             foreach ($this->_attrs as $name => $value) {
                 if (is_bool($value)) {

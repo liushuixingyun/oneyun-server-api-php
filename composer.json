@@ -1,0 +1,19 @@
+{
+  "name":"oneyun/sdk",
+  "description": "oneyun sdk",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "chenjj",
+      "email": "chenjj@oneyun.com"
+    }
+  ],
+  "autoload":{
+    "psr-4": {
+      "Oneyun\\": "Oneyun/"
+    }
+  },
+  "type":"library",
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
