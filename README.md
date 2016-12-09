@@ -7,7 +7,6 @@ composer require oneyun/sdk
 ##Quickstart
 
 ###语音回拨
-示例
 ```php
 <?php
 
@@ -37,17 +36,15 @@ var_dump($res); //返回结果
 ```
 
 ###语音通知
-示例
 ```php
 <?php
 
 //动态播放内容
-
 $play_content = array(
       array(date('Y-m-d H:i:s'),4,'')
 );
 
-$res = $oneyun->notify->create(
+$oneyun->notifyCall->create(
     '17606661993',
     $play_content,
     array(
@@ -57,16 +54,14 @@ $res = $oneyun->notify->create(
     )
 );
 
-var_dump($res); //返回结果
 
 ```
 
 ###语音验证码
-示例
 ```php
 <?php
 
-$res = $oneyun->verfiy->create(
+$oneyun->verfiyCall->create(
     '17606661993',
     '8888',
     array(
@@ -74,38 +69,173 @@ $res = $oneyun->verfiy->create(
         'max_dial_duration'=>30
     )
 );
-
-var_dump($res); //返回结果
 
 ```
 
 ###IVR呼出
-示例
 ```php
 <?php
 
-$res = $oneyun->verfiy->create(
+$oneyun->ivrCall->create(
     '17606661993',
-    '8888',
     array(
         'user_data'=>'',
         'max_dial_duration'=>30
     )
 );
-
-var_dump($res); //返回结果
 
 ```
 
 
 ###IVR
 
+####放音
 
-###默认值
-| 功能块     | 参数   | 默认值                         |
-| ---------   | ------- | ----------------------------- |
-|  语音回拨   | `max_call_duration` 最大通话时长（秒）   |      ?     |
-|  IVR呼出    | `max_call_duration`  最大接通时间（秒）  |       ?    |
+> play示例
+
+```
+<?php
+require __DIR__."/vendor/autoload.php";
+
+$ivr = new Oneyun\Ivr();
+$ivr->play('文件名.wav');
+$ivr->next('http://localhost/ivr.php?step=hangup');
+//输出
+echo $ivr;
+```
+
+输出结果
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <play>文件名.wav</play>
+  <next>http://localhost/ivr.php?step=hangup</next>
+</response>
+```
 
 
+> playlist示例
+```php
+$ivr = new Oneyun\Ivr();
+$ivr->playlist(
+    array(
+        '文件名1.wav',
+        '文件名2.wav'
+    )
+);
+$ivr->next('http://localhost/ivr.php?step=hangup');
+
+echo $ivr;
+```
+
+输出结果
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <playlist>
+    <play>文件名1.wav</play>
+    <play>文件名2.wav</play>
+  </playlist>  
+  <next>http://localhost/ivr.php?step=hangup</next>
+</response>
+```
+
+
+####录音
+> record示例
+```php
+$ivr = new Oneyun\Ivr();
+$ivr->record();
+$ivr->next('http://localhost/ivr.php?step=hangup');
+
+echo $ivr;
+```
+输出结果
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <record></record>  
+  <next>http://localhost/ivr.php?step=hangup</next>
+</response>
+```
+
+
+
+####收码
+> get示例
+```php
+$ivr = new Oneyun\Ivr();
+$ivr->get(
+  'get.wav',
+  array(
+    'valid_keys'=>'0123456789#',
+    'finish_keys'=>'#'
+  )
+);
+$ivr->next('http://localhost/ivr.php?step=hangup');
+
+echo $ivr;
+```
+
+输出结果
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+    <get valid_keys="0123456789#" finish_keys="#">
+        <play>get.wav</play>
+    </get>
+    <next>http://localhost/ivr.php?step=hangup</next>
+</response>
+```
+
+
+####挂断
+> hangup示例
+```
+$ivr = new Oneyun\Ivr();
+$ivr->hangup();
+
+echo $ivr;
+```
+
+输出结果
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <hangup></hangup>
+</response>
+```
+
+
+
+
+####拨号
+> dial示例
+```
+$ivr = new Oneyun\Ivr();
+
+$ivr->dial('17606661993');
+$ivr->next('http://localhost/ivr.php?step=hangup');
+
+echo $ivr;
+```
+
+输出结果
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <dial>
+    <number>17606661993</number>
+    <connect><connect/>
+  </dial>
+  <next>http://localhost/ivr.php?step=hangup</next>
+</response>
+```
+
+####后续
+> next示例
+```php
+$ivr = new Oneyun\Ivr();
+$ivr->next();
+```
 
