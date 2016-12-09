@@ -7,6 +7,9 @@ composer require oneyun/sdk
 ##Quickstart
 
 ###语音回拨
+
+> calls
+
 ```php
 <?php
 
@@ -35,7 +38,27 @@ var_dump($res); //返回结果
 
 ```
 
+###语音回拨挂断
+
+```php
+<?php
+
+$oneyun = new Oneyun\Rest\Client($appId, $certId, $apiUrl, $secreKey);
+
+$result = $oneyun->calls->cancel(
+    'callId'
+);
+
+var_dump($result); //返回结果
+
+```
+
+
+
 ###语音通知
+
+> notifyCall
+
 ```php
 <?php
 
@@ -60,7 +83,6 @@ $oneyun->notifyCall->create(
 ###语音验证码
 ```php
 <?php
-
 $oneyun->verfiyCall->create(
     '17606661993',
     '8888',
@@ -73,6 +95,9 @@ $oneyun->verfiyCall->create(
 ```
 
 ###IVR呼出
+
+> ivrCall
+
 ```php
 <?php
 
@@ -113,8 +138,8 @@ echo $ivr;
 </response>
 ```
 
-
 > playlist示例
+
 ```php
 $ivr = new Oneyun\Ivr();
 $ivr->playlist(
@@ -142,7 +167,9 @@ echo $ivr;
 
 
 ####录音
+
 > record示例
+
 ```php
 $ivr = new Oneyun\Ivr();
 $ivr->record();
@@ -150,6 +177,7 @@ $ivr->next('http://localhost/ivr.php?step=hangup');
 
 echo $ivr;
 ```
+
 输出结果
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -162,7 +190,9 @@ echo $ivr;
 
 
 ####收码
+
 > get示例
+
 ```php
 $ivr = new Oneyun\Ivr();
 $ivr->get(
@@ -190,7 +220,9 @@ echo $ivr;
 
 
 ####挂断
+
 > hangup示例
+
 ```
 $ivr = new Oneyun\Ivr();
 $ivr->hangup();
@@ -210,7 +242,9 @@ echo $ivr;
 
 
 ####拨号
+
 > dial示例
+
 ```
 $ivr = new Oneyun\Ivr();
 
@@ -233,7 +267,9 @@ echo $ivr;
 ```
 
 ####后续
+
 > next示例
+
 ```php
 $ivr = new Oneyun\Ivr();
 $ivr->next();
