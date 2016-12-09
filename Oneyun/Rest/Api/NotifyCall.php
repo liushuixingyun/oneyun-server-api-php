@@ -27,7 +27,6 @@ class NotifyCall extends Version
      */
     public function create($to = null,$play_content = null,$options = array()){
 
-
         if(!$to){
             throw new OptionsException('被叫号码必填');
         }

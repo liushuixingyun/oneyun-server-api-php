@@ -1,6 +1,7 @@
 <?php
 namespace Oneyun\Rest\Api;
 
+use Oneyun\Exceptions\OptionsException;
 use Oneyun\Version;
 use Oneyun\Domain;
 use Oneyun\Common\Values;
@@ -24,12 +25,11 @@ class Call extends Version
      */
     public function create($to1 = null, $to2 = null, $options = array())
     {
-
         //初始化默认值
         $call = CallOptions::create();
 
         //合并数组
-        $options = array_merge($call->getOptions(),$options);
+        $options = array_merge($call->getOptions(), $options);
 
         //过滤参数
         $options = new Values($options);
@@ -49,12 +49,12 @@ class Call extends Version
             'user_data' => $options['user_data']
         ));
 
-        $response = $this->request('POST',$this->getBaseUrl().self::CALL_URL ,array(),$data);
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALL_URL, array(), $data);
 
         return array(
-            'statusCode'=>$response->getStatusCode(),
-            'headers'=>$response->getHeaders(),
-            'content'=>$response->getContent()
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
         );
     }
 
@@ -62,8 +62,24 @@ class Call extends Version
      *  取消语音回拨
      * @param $callId
      */
-    public function cancel($callId){
+    public function cancel($callId)
+    {
+        if(!$callId){
+            throw new OptionsException('呼叫的ID必填');
+        }
 
+        //取值
+        $data = array(
+            'callId' => $callId
+        );
+
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALL_CANCEL_URL, array(), $data);
+
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
 
     }
 }
