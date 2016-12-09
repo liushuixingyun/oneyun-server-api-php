@@ -1,6 +1,7 @@
 {
   "name":"oneyun/sdk",
-  "description": "oneyun sdk",
+  "description": "oneyun-server-api-php sdk",
+  "keywords": ["oneyun", "sdk", "api","call"],
   "license": "MIT",
   "authors": [
     {
@@ -14,11 +15,6 @@
     }
   },
   "type":"library",
-  "extra": {
-    "branch-alias": {
-      "dev-master": "0.1.0-dev"
-    }
-  },
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "prefer-stable": true
 }
