@@ -7,15 +7,34 @@ use Oneyun\Common\Encrypt;
 
 Class Client
 {
-
+    /**
+     * 应用标识
+     * @var string
+     */
     protected $appId;
+
+    /**
+     * 鉴权账号
+     * @var string
+     */
     protected $certId;
+
+    /**
+     * 接口API
+     * @var string
+     */
     protected $apiUrl;
+
+    /**
+     * 密钥
+     * @var string
+     */
     protected $secreKey;
+
     protected $httpClient;
 
     private $_api;
-    private $_ivr;
+
 
     /**
      *  初始化参数
@@ -46,7 +65,7 @@ Class Client
     }
 
     /**
-     * Makes a request to the Twilio API using the configured http client
+     * Makes a request to the Oneyun API using the configured http client
      * Authentication information is automatically added if none is provided
      *
      * @param string $method HTTP Method
@@ -55,7 +74,7 @@ Class Client
      * @param string[] $data POST body data
      * @param string[] $headers HTTP Headers
      * @param int $timeout Timeout in seconds
-     * @return \Oneyun\Http\Response Response from the Twilio API
+     * @return \Oneyun\Http\Response Response from the Oneyun API
      */
     public function request($method = null, $uri = null, $params = array(), $data = array(), $headers = array(), $timeout = null)
     {
@@ -94,17 +113,6 @@ Class Client
             $headers,
             $timeout
         );
-
-
-
-    }
-
-    function __autoload($class)
-    {
-        $file = $class . '.php';
-        if (is_file($file)) {
-            require_once($file);
-        }
     }
 
     /**
@@ -142,7 +150,6 @@ Class Client
     {
         return $this->api->ivrCall;
     }
-
 
     /**
      * @return Api

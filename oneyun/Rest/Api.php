@@ -49,7 +49,7 @@ class Api extends Domain
         return $this->_ivrCall;
     }
 
-    function __get($name)
+    public function __get($name)
     {
         $method = "get" . ucfirst($name);
         if (method_exists($this, $method)) {

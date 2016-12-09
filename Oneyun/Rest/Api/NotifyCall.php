@@ -8,7 +8,9 @@ use Oneyun\Common\Values;
 
 class NotifyCall extends Version
 {
-    //语音通知
+    /**
+     * 语音通知 address
+     */
     const  CALL_NOTIFY_CALL = "call/notify_call";
 
     function __construct(Domain $domain)
@@ -16,6 +18,12 @@ class NotifyCall extends Version
         parent::__construct($domain);
     }
 
+    /**
+     * @param null $to
+     * @param null $play_content
+     * @param array $options
+     * @return array
+     */
     public function create($to = null,$play_content = null,$options = array()){
 
         //初始化默认值

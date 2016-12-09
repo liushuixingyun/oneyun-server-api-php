@@ -8,11 +8,6 @@ use Oneyun\Http\Response;
 abstract class Version
 {
     /**
-     * @const int MAX_PAGE_SIZE largest page the Twilio API will return
-     */
-    const MAX_PAGE_SIZE = 1000;
-
-    /**
      * @var \Oneyun\Domain $domain
      */
     protected $domain;
@@ -31,18 +26,32 @@ abstract class Version
         $this->version = null;
     }
 
+    /**
+     * @return null
+     */
     public function getBaseUrl()
     {
         return $this->getDomain()->getBaseUrl();
     }
 
-
+    /**
+     * @param $uri
+     * @return string
+     */
     public function relativeUri($uri)
     {
         return trim($this->version, '/') . '' . trim($uri, '/');
     }
 
-
+    /**
+     * @param null $method
+     * @param null $uri
+     * @param array $params
+     * @param array $data
+     * @param array $headers
+     * @param null $timeout
+     * @return Response
+     */
     public function request($method = null, $uri = null, $params = array(), $data = array(),
                             $headers = array(), $timeout = null)
     {
@@ -58,7 +67,11 @@ abstract class Version
         );
     }
 
-
+    /**
+     * @param $response
+     * @param $header
+     * @return Exceptions
+     */
     protected function exception($response, $header)
     {
         $message = '[HTTP ' . $response->getStatusCode() . '] ' . $header;

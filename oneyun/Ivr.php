@@ -4,20 +4,58 @@ namespace Oneyun;
 
 class Ivr
 {
+    /**
+     * @var \SimpleXMLElement
+     */
+    protected $element;
 
-    protected $element; //xml
-    protected $_verb; //节点名
-    protected $_noun; //节点值
-    protected $_attrs; //参数
+    /**
+     * 节点名
+     * @var
+     */
+    protected $_verb;
+    /**
+     * 节点值
+     * @var
+     */
+    protected $_noun;
 
-    //默认参数
+    /**
+     * 参数
+     * @var
+     */
+    protected $_attrs;
+
+    /**
+     * play node
+     * @var array
+     */
     protected static $playAttr = array('finish_keys', 'repeat');
+
+    /**
+     * record node
+     * @var array
+     */
     protected static $recordAttr = array('max_duration', 'beeping', 'finish_keys');
+
+    /**
+     * @var array
+     */
     protected static $dailAttr = array('from', 'max_call_duration', 'max_dial_duration', 'dial_voice_stop_cond');
+
+    /**
+     * @var array
+     */
     protected static $getAttr = array('valid_keys', 'max_keys', 'finish_keys', 'first_key_timeout', 'continues_keys_timeout', 'play_repeat', 'if_break_on_key');
+
+    /**
+     * @var array
+     */
     protected static $connectAttr = array('max_duration', 'mode', 'recording', 'volume1', 'volume2', 'play_time');
 
-    //公共节点
+    /**
+     * @var array
+     */
     protected static $node = array('play', 'record', 'send_dtmf', 'get', 'hangup', 'dial', 'connect', 'next', 'playlist');
 
     /**
@@ -45,7 +83,12 @@ class Ivr
         }
     }
 
-
+    /**
+     * @param $verb
+     * @param array $args
+     * @return mixed
+     * @throws \Exception
+     */
     public function __call($verb, array $args)
     {
 
@@ -212,14 +255,6 @@ class Ivr
             }
         }
         $this->_attrs = $params;
-        /*
-         * 记录
-          if($this->_attrs){
-            $keys = array_keys($this->_attrs);
-            return implode(' | ',array_diff($keys,$type));
-          }
-          return '';
-        */
     }
 
 

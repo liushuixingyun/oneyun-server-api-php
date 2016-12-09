@@ -9,7 +9,9 @@ use Oneyun\Common\Values;
 class VerifyCall extends Version
 {
 
-    //语音验证码
+    /**
+     *  语音验证码 address
+     */
     const  CALL_CAPTCHA_CALL = "call/verify_call";
 
     function __construct(Domain $domain)
@@ -17,6 +19,12 @@ class VerifyCall extends Version
         parent::__construct($domain);
     }
 
+    /**
+     * @param null $to
+     * @param null $verify_code
+     * @param array $options
+     * @return array
+     */
     public function create($to = null,$verify_code = null,$options = array()){
 
         //初始化默认值
