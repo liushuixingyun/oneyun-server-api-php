@@ -179,17 +179,20 @@ class Ivr
         //过滤参数
         $this->Filter(self::$getAttr);
 
-        $child = $this->addAttribute($this->element->addChild($this->_verb," "));
+        $child = $this->addAttribute($this->element->addChild($this->_verb, " "));
 
         if (is_array($this->_noun)) {
 
-            $child = $child->addChild('playlist'," ");
+            $child = $child->addChild('playlist', " ");
 
             foreach ($this->_noun as $value) {
                 $child->addChild('play', $value);
             }
-        } else {
+
+        } else if ($this->_noun) {
+
             $child->addChild('play', $this->_noun);
+
         }
 
         return $child;
@@ -225,7 +228,7 @@ class Ivr
         if (array_key_exists('connect', $params)) {
 
             $this->Filter(self::$connectAttr, $params['connect']);
-            $child = $this->addAttribute($child->addChild('connect'," "));
+            $child = $this->addAttribute($child->addChild('connect', " "));
 
             //<play>
             $play = isset($params['connect']['play']) ? $params['connect']['play'] : '';

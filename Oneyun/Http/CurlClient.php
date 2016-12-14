@@ -29,7 +29,7 @@ class CurlClient implements Client
             }
 
             if (!$response = curl_exec($curl)) {
-                //throw new EnvironmentException(curl_error($curl));
+                throw new HttpException(curl_error($curl));
             }
 
 
@@ -84,13 +84,11 @@ class CurlClient implements Client
                             $headers = array(), $timeout = null)
     {
 
-
         $timeout = is_null($timeout)
             ? self::DEFAULT_TIMEOUT
             : $timeout;
 
         $options = $this->curlOptions + array(
-                //CURLOPT_URL => "http://101.200.73.13:8085/lps/ivr.php?step=lineup",
                 CURLOPT_URL => $uri,
                 CURLOPT_HEADER => true,
                 CURLOPT_SSL_VERIFYHOST => FALSE,

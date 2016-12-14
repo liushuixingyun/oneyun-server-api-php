@@ -8,7 +8,7 @@ composer require oneyun/sdk
 
 ###语音回拨
 
-> calls
+> calls示例
 
 ```php
 <?php
@@ -57,7 +57,7 @@ var_dump($result); //返回结果
 
 ###语音通知
 
-> notifyCall
+> notifyCall示例
 
 ```php
 <?php
@@ -81,6 +81,9 @@ $oneyun->notifyCall->create(
 ```
 
 ###语音验证码
+
+> verfiyCall示例
+
 ```php
 <?php
 $oneyun->verfiyCall->create(
@@ -96,7 +99,7 @@ $oneyun->verfiyCall->create(
 
 ###IVR呼出
 
-> ivrCall
+> ivrCall示例
 
 ```php
 <?php
@@ -196,11 +199,7 @@ echo $ivr;
 ```php
 $ivr = new Oneyun\Ivr();
 $ivr->get(
-  'get.wav',
-  array(
-    'valid_keys'=>'0123456789#',
-    'finish_keys'=>'#'
-  )
+  'get.wav'
 );
 $ivr->next('http://localhost/ivr.php?step=hangup');
 
@@ -209,6 +208,7 @@ echo $ivr;
 
 输出结果
 ```
+
 <?xml version="1.0" encoding="UTF-8"?>
 <response>
     <get valid_keys="0123456789#" finish_keys="#">

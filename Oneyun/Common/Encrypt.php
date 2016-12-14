@@ -20,7 +20,12 @@ class Encrypt
      */
     public static function create($method, $payload, $contentType, $timestamp, $appId, $apiUrl, $secret)
     {
-        return self::calculateHMAC($secret, self::getSign($method, $payload, $contentType, $timestamp, $appId, $apiUrl));
+
+        $sign = self::getSign($method, $payload, $contentType, $timestamp, $appId, $apiUrl);
+
+        $hmac = self::calculateHMAC($secret, $sign);
+
+        return $hmac;
     }
 
 
@@ -37,8 +42,10 @@ class Encrypt
     protected static function getSign($method, $payload, $contentType, $timestamp, $appId, $apiUrl)
     {
         $hasConent = $method ? true : false;
-        $contentMd5 = isset($hasConent) ? md5($payload) : '';
-        $contentType = isset($hasConent) ? $contentType : '';
+
+        $contentMd5 = $hasConent ? md5($payload) : '';
+
+        $contentType = $hasConent ? $contentType : '';
 
         $sign = $method . "\n" . $contentMd5 . "\n" . $contentType . "\n" . $timestamp . "\n" . $appId . "\n" . $apiUrl;
 
