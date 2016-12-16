@@ -1,14 +1,15 @@
 #ONEYUN PHP SDK
 
-#Installation
+# Installation
 ```php
 composer require oneyun/sdk
 ```
-##Quickstart
+## Quickstart
 
-###语音回拨
-
+### 语音回拨
 > calls示例
+
+语音回拨发起
 
 ```php
 <?php
@@ -38,7 +39,7 @@ var_dump($res); //返回结果
 
 ```
 
-###语音回拨挂断
+语音回拨挂断
 
 ```php
 <?php
@@ -55,7 +56,7 @@ var_dump($result); //返回结果
 
 
 
-###语音通知
+### 语音通知
 
 > notifyCall示例
 
@@ -80,7 +81,7 @@ $oneyun->notifyCall->create(
 
 ```
 
-###语音验证码
+### 语音验证码
 
 > verfiyCall示例
 
@@ -97,7 +98,7 @@ $oneyun->verfiyCall->create(
 
 ```
 
-###IVR呼出
+### IVR呼出
 
 > ivrCall示例
 
@@ -115,7 +116,7 @@ $oneyun->ivrCall->create(
 ```
 
 
-###IVR
+### IVR
 
 ####放音
 
@@ -169,7 +170,7 @@ echo $ivr;
 ```
 
 
-####录音
+#### 录音
 
 > record示例
 
@@ -192,7 +193,7 @@ echo $ivr;
 
 
 
-####收码
+#### 收码
 
 > get示例
 
@@ -219,7 +220,7 @@ echo $ivr;
 ```
 
 
-####挂断
+#### 挂断
 
 > hangup示例
 
@@ -241,7 +242,7 @@ echo $ivr;
 
 
 
-####拨号
+#### 拨号
 
 > dial示例
 
@@ -266,7 +267,7 @@ echo $ivr;
 </response>
 ```
 
-####后续
+#### 后续
 
 > next示例
 

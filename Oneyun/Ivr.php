@@ -56,7 +56,12 @@ class Ivr
     /**
      * @var array
      */
-    protected static $node = array('play', 'record', 'send_dtmf', 'get', 'hangup', 'dial', 'connect', 'next', 'playlist');
+    protected static $pauseAttr = array('timeout');
+
+    /**
+     * @var array
+     */
+    protected static $node = array('play', 'record', 'send_dtmf', 'get', 'hangup', 'dial', 'connect', 'next', 'playlist', 'pause');
 
     /**
      *  初始化
@@ -103,6 +108,7 @@ class Ivr
         }
 
         $method = 'create' . ucfirst($verb);
+
         if (!function_exists($method)) {
             return $this->$method();
         }
@@ -110,7 +116,7 @@ class Ivr
 
 
     /**
-     * 创建play(放音)节点
+     * 创建play 放音节点
      * @return static
      */
     private function createPlay()
@@ -120,7 +126,7 @@ class Ivr
     }
 
     /**
-     * 创建playlist(放音)节点
+     * 创建playlist 放音节点
      * @return static
      */
     private function createPlaylist()
@@ -140,9 +146,26 @@ class Ivr
         return new static($child);
     }
 
+    /**
+     * 创建pause 暂停节点
+     */
+    protected function createPause()
+    {
+        $attr = $this->_noun;
+
+        if (!is_array($attr) && !empty($attr)) {
+            throw new \Exception('The first parameter is an array, refer to the SDK Pause Record function');
+        }
+
+        $this->Filter(self::$pauseAttr, $attr);
+
+        $child = $this->addAttribute($this->element->addChild($this->_verb, " "));
+
+        return new static($child);
+    }
 
     /**
-     * 创建next(下一步)节点
+     * 创建next 后续节点
      * @return static
      */
     protected function createNext()
@@ -151,18 +174,26 @@ class Ivr
     }
 
     /**
-     * 创建record(录音) 节点
+     * 创建record 录音节点
      * @return static
      */
     protected function createRecord()
     {
-        $this->Filter(self::$recordAttr);
-        return new static($this->addChild());
+        $attr = $this->_noun;
 
+        if (!is_array($attr) && !empty($attr)) {
+            throw new \Exception('The first parameter is an array, refer to the SDK IVR Record function');
+        }
+
+        $this->Filter(self::$recordAttr, $attr);
+
+        $child = $this->addAttribute($this->element->addChild($this->_verb, " "));
+
+        return new static($child);
     }
 
     /**
-     * 创建send_dtmf(发码) 节点
+     * 创建send_dtmf 发码节点
      * @return static
      */
     protected function createSend_dtmf()
@@ -171,7 +202,7 @@ class Ivr
     }
 
     /**
-     * 创建get(收码)节点
+     * 创建get 收码节点
      * @return static
      */
     protected function createGet()
@@ -199,7 +230,7 @@ class Ivr
     }
 
     /**
-     * 创建hangup(挂断)节点
+     * 创建hangup 挂断节点
      * @return static
      */
     protected function createHangup()
@@ -208,7 +239,7 @@ class Ivr
     }
 
     /**
-     * 创建dail(拨号)节点
+     * 创建dail 拨号节点
      * @return static
      */
     protected function createDial()
@@ -246,11 +277,31 @@ class Ivr
     }
 
     /**
-     * 创建connect
+     * 创建connect 连接节点
      */
     protected function createConnect()
     {
 
+        //过滤参数
+        $this->Filter(self::$recordAttr);
+
+        $child = $this->addAttribute($this->element->addChild($this->_verb, " "));
+
+        if (is_array($this->_noun)) {
+
+            $child = $child->addChild('playlist', " ");
+
+            foreach ($this->_noun as $value) {
+                $child->addChild('play', $value);
+            }
+
+        } else if ($this->_noun) {
+
+            $child->addChild('play', $this->_noun);
+
+        }
+
+        return $child;
     }
 
     /**
