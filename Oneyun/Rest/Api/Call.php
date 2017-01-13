@@ -17,11 +17,13 @@ class Call extends Version
     }
 
     /**
+     * Call Oneyun platform Call
      *
-     * @param null $to1
-     * @param null $to2
-     * @param array $options
-     * @return array 返回结果
+     * @param string $to1 第一方的被叫号码。.
+     * @param string $to2 第二方的被叫号码。.
+     * @param array $options 语音回拨参数 .
+     *
+     * @return array Returns callback results.
      */
     public function create($to1 = null, $to2 = null, $options = array())
     {

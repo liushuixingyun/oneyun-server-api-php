@@ -25,6 +25,13 @@ class Api extends Domain
         return $this->_call;
     }
 
+    /**
+     * This method will not change until a major release.
+     * @author oneyun
+     * @api
+     *
+     * @return void
+     */
     protected function getVerifyCall()
     {
         if (!$this->_verifyCall) {
