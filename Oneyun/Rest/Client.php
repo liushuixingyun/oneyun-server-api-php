@@ -92,7 +92,7 @@ Class Client
         $headers['Timestamp'] = date('YmdHis', time());
 
         //实体头
-        if ($method == 'POST' && !array_key_exists('Content-Type', $headers)) {
+        if (!array_key_exists('Content-Type', $headers)) {
             $headers['Content-Type'] = 'application/json; charset=utf-8';
         }
 
@@ -102,7 +102,7 @@ Class Client
         }
 
         //签名加密
-        $signature = Encrypt::create('POST', json_encode($data), $headers['Content-Type'], $headers['Timestamp'], $this->appId, parse_url($uri, PHP_URL_PATH), $this->secreKey);
+        $signature = Encrypt::create($method, json_encode($data), $headers['Content-Type'], $headers['Timestamp'], $this->appId, parse_url($uri, PHP_URL_PATH), $this->secreKey);
 
         if (!array_key_exists('Signature', $headers)) {
             $headers['Signature'] = $signature;
@@ -165,9 +165,16 @@ Class Client
         return $this->_api;
     }
 
+    /**
+     * @return CurlClient
+     */
     public function getHttpClient()
     {
         return $this->httpClient;
+    }
+
+    public function getCallCenter(){
+        return $this->api->callCenter;
     }
 
     /**

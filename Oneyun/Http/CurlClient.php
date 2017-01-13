@@ -84,6 +84,9 @@ class CurlClient implements Client
                             $headers = array(), $timeout = null)
     {
 
+
+
+
         $timeout = is_null($timeout)
             ? self::DEFAULT_TIMEOUT
             : $timeout;
@@ -104,13 +107,11 @@ class CurlClient implements Client
             $options[CURLOPT_HTTPHEADER][] = "$key: $value";
         }
 
+        $body = $this->buildQuery($params);
 
-        /* $body = $this->buildQuery($params);
-
-
-         if ($body) {
-             $options[CURLOPT_URL] .= '?' . $body;
-         }*/
+        if ($body) {
+        $options[CURLOPT_URL] .= '?' . $body;
+        }
 
         switch (strtolower(trim($method))) {
             case 'get':
@@ -137,9 +138,20 @@ class CurlClient implements Client
             case 'head':
                 $options[CURLOPT_NOBODY] = true;
                 break;
+            case 'delete':
+
+
+                $options[CURLOPT_POSTFIELDS] = json_encode($params);
+                $options[CURLOPT_CUSTOMREQUEST] = strtoupper($method);
+                $options[CURLOPT_RETURNTRANSFER] = true;
+
+
+
+                break;
             default:
                 $options[CURLOPT_CUSTOMREQUEST] = strtoupper($method);
         }
+
 
         return $options;
     }

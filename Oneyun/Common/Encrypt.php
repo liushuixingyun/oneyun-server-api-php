@@ -41,7 +41,7 @@ class Encrypt
      */
     protected static function getSign($method, $payload, $contentType, $timestamp, $appId, $apiUrl)
     {
-        $hasConent = $method ? true : false;
+        $hasConent = ($method == 'POST' || $method == 'PUT') ? true : false;
 
         $contentMd5 = $hasConent ? md5($payload) : '';
 

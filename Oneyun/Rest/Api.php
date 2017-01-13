@@ -12,6 +12,8 @@ class Api extends Domain
     protected $_notifyCall;
     protected $_ivrCall;
 
+    protected $_callCenter;
+
     public function __construct(Client $client)
     {
         parent::__construct($client);
@@ -48,6 +50,15 @@ class Api extends Domain
         }
         return $this->_ivrCall;
     }
+
+    protected function getCallCenter()
+    {
+        if (!$this->_callCenter) {
+            $this->_callCenter = new Api\CallCenter\CallCenter($this);
+        }
+        return $this->_callCenter;
+    }
+
 
     public function __get($name)
     {
