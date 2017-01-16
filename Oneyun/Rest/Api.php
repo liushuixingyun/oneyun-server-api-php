@@ -11,7 +11,6 @@ class Api extends Domain
     protected $_verifyCall;
     protected $_notifyCall;
     protected $_ivrCall;
-
     protected $_callCenter;
 
     public function __construct(Client $client)

@@ -70,22 +70,19 @@ class CurlClient implements Client
         }
     }
 
-
     /**
      * @param $method
-     * @param $url
+     * @param $uri
      * @param array $params
      * @param array $data
      * @param array $headers
      * @param null $timeout
      * @return array
+     * @throws HttpException
      */
     public function options($method, $uri, $params = array(), $data = array(),
                             $headers = array(), $timeout = null)
     {
-
-
-
 
         $timeout = is_null($timeout)
             ? self::DEFAULT_TIMEOUT
@@ -139,20 +136,13 @@ class CurlClient implements Client
                 $options[CURLOPT_NOBODY] = true;
                 break;
             case 'delete':
-
-
                 $options[CURLOPT_POSTFIELDS] = json_encode($params);
                 $options[CURLOPT_CUSTOMREQUEST] = strtoupper($method);
                 $options[CURLOPT_RETURNTRANSFER] = true;
-
-
-
                 break;
             default:
                 $options[CURLOPT_CUSTOMREQUEST] = strtoupper($method);
         }
-
-
         return $options;
     }
 

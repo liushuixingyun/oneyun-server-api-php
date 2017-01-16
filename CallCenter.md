@@ -2,7 +2,7 @@
 
 ## 分机
 
-### 新建分机
+### 新建分机 [ok]
 
 ```php
 <?php
@@ -30,136 +30,125 @@ var_dump($res); //返回结果
 
 ```
 
-### 删除分机
+### 删除分机 [ok]
 ```php
-<?php
-
 $extension_id = '8a2a6a4a59965bab0159968f95840000';
-
 $res = $oneyun->callcenter->deleteExt($extension_id);
-
-var_dump($res); //返回结果
-
 ```
 
-### 查看一个分机
+### 查看一个分机 [ok]
 
 
 ```php
-<?php
-
 $extension_id = '8a2a6a4a59965bab0159968f95840000';
-
-$res = $oneyun->callcenter->findAllExt($extension_id);
-
-var_dump($res); //返回结果
-
+$res = $oneyun->callcenter->findExt($extension_id);
 ```
 
-### 查看分机列表
-
-
+### 查看分机列表 [ok]
 ```php
-<?php
-
-$pageNo = 1;
-$pageSize = 10;
-
 $res = $oneyun->callcenter->findAllExt($pageNo,$pageSize);
-
-var_dump($res); //返回结果
-
 ```
 
 ## 坐席
 
-### 登录
+### 坐席登录
 ```php
-<?php
-
-$name = null;
-$channel = null;
-$extension = null;  
-$options =array();
-
 $res = $oneyun->callcenter->agentLogin($name,$channel,$extension,$options);
-
-var_dump($res); //返回结果
-
 ```
 
-### 注销
+### 坐席注销
 ```php
-
 $res = $oneyun->callcenter->agentLogout($name = '',$force = false);
-
-var_dump($res); //返回结果
-
 ```
 
-
-### 报到
+### 坐席报到
 ```php
-
 $res = $oneyun->callcenter->agentKeep($name = '');
-
-var_dump($res); //返回结果
-
 ```
 
-### 获取坐席信息
+### 获取单个坐席信息 [ok]
 ```php
-
-$res = $oneyun->callcenter->agentKeep($name = '');
-
-var_dump($res); //返回结果
-
-```
-
-### 获取单个坐席信息
-```php
-
 $res = $oneyun->callcenter->findAgent($name = '');
-
-var_dump($res); //返回结果
-
 ```
 
-### 获取坐席信息列表
+### 获取坐席信息列表 [ok]
 ```php
-
 $res = $oneyun->callcenter->findAllAgent($pageNo = 1,$pageSize = 10);
-
-var_dump($res); //返回结果
-
 ```
 
-### 设置坐席分机
+### 设置坐席分机 
 ```php
-
 $res = $oneyun->callcenter->setAgentExt($agent_name,$ext_id )
-
-var_dump($res); //返回结果
-
 ```
 
-### 设置坐席状态
+### 设置坐席状态 
 ```php
-
-$res = $oneyun->callcenter->setAgentState($agent_name,$state)
-
-var_dump($res); //返回结果
-
+$res = $oneyun->callcenter->setAgentState($agent_name,$state);
 ```
 
-### 坐席技能设置
+### 设置坐席技能 
 ```php
-$res = $oneyun->callcenter->setAgentSkills($agent_name,$opts)
-
-
-    
+$res = $oneyun->callcenter->setAgentSkills($agent_name,$opts);
 
 ```
+
+## 工作通道
+
+### 新建工作通道 [ok]
+```php
+$res = $oneyun->callcenter->createChannel($max_agent, $max_skill, $max_condition, $max_queue, $options);
+
+```
+
+### 删除工作通道 [ok]
+```php
+$res = $oneyun->callcenter->deleteChannel($channel_id);
+
+```
+
+### 修改工作通道 [ok]
+```php
+$res = $oneyun->callcenter->editChannel($max_agent, $max_skill, $max_condition, $max_queue, $options);
+```
+
+### 获取单条工作通道 [ok]
+```php
+$res = $oneyun->callcenter->findChannel($channel_id);
+
+```
+
+### 获取多条工作通道 [ok]
+```php
+$res = $oneyun->callcenter->findAllChannel();
+```
+
+## 排队条件
+
+### 新建排队条件 [ok]
+```php
+$res = $oneyun->callcenter->createCondition($channe,$where,$options);
+```
+
+### 删除排队条件 [ok]
+```php
+$res = $oneyun->callcenter->deleteChannel($channel_id);
+```
+
+### 修改排队条件 [ok]
+```php
+$res = $oneyun->callcenter->editCondition($condition_id,$channe,$where,$options);
+```
+
+### 获取单条排队条件 [ok]
+```php
+$res = $oneyun->callcenter->findChannel($channel_id);
+```
+
+### 获取多条排队条件 [ok]
+```php
+$res = $oneyun->callcenter->findAllCondition();
+```
+
 
 
 

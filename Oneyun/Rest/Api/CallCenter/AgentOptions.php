@@ -7,20 +7,19 @@ use Oneyun\Common\Values;
 abstract class AgentOptions
 {
     /**
-     * @param null $type defualt null
-     * @param string $user
-     * @param null $password null
-     * @param string $ipaddr
-     * @param null $telnum defualt null
-     * @return CreateCallOptions
+     * @param null $name
+     * @param null $channel
+     * @param null $num
+     * @param null $state
+     * @param array $skills
+     * @param null $extension
+     * @return CreateAgentOptions
      */
-    public static function create($name = null, $channel = null, $num = null, $state = null, $skills = null,$extension = null)
+    public static function create($name = null, $channel = null, $num = null, $state = null, $skills = array(),$extension = null)
     {
         return new CreateAgentOptions($name, $channel, $num, $state, $skills,$extension);
     }
-
 }
-
 
 class CreateAgentOptions extends Options
 {
