@@ -10,8 +10,9 @@ class CallCenter extends Version
 {
     const CALLCENTER_EXTENSION = "callcenter/extension"; // 分机
     const CALLCENTER_AGENT = "callcenter/agent"; // 坐席
-    const CALLCENTER_CHANNEL = "callcenter/channel"; //通道
-    const CALLCENTER_CONDITION = "callcenter/condition"; //排队
+    const CALLCENTER_CHANNEL = "callcenter/channel"; // 通道
+    const CALLCENTER_CONDITION = "callcenter/condition"; // 排队
+    const CALLCENTER_CONVERSATION = "callcenter/conversation"; // 交谈
 
     public function __construct(Domain $domain)
     {
@@ -313,29 +314,31 @@ class CallCenter extends Version
      * @return array
      * @throws OptionsException
      */
-    public function createChannel($max_agent, $max_skill, $max_condition, $max_queue, $options)
+    // public function createChannel($max_agent,$max_skill,$max_condition,,$options)
+    public function createChannel($id, $options)
     {
-        if (empty($max_agent)) {
-            throw new OptionsException('工作通道所容纳的最大坐席数量必填');
-        }
-        if (empty($max_skill)) {
-            throw new OptionsException('工作通道所容纳的最大技能数量必填');
-        }
-        if (empty($max_condition)) {
-            throw new OptionsException('工作通道所容纳的最大排队条件设置数量必填');
-        }
-        if (empty($max_queue)) {
-            throw new OptionsException('工作通道所容纳的最大排队任务数量必填');
-        }
+//        if (empty($max_agent)) {
+//            throw new OptionsException('工作通道所容纳的最大坐席数量必填');
+//        }
+//        if (empty($max_skill)) {
+//            throw new OptionsException('工作通道所容纳的最大技能数量必填');
+//        }
+//        if (empty($max_condition)) {
+//            throw new OptionsException('工作通道所容纳的最大排队条件设置数量必填');
+//        }
+//        if (empty($max_queue)) {
+//            throw new OptionsException('工作通道所容纳的最大排队任务数量必填');
+//        }
         $channel = ChannelOptions::create();
         $options = array_merge($channel->getOptions(), $options);
         $options = new Values($options);
 
         $data = Values::of(array(
-            'max_agent' => $max_agent,
-            'max_skill' => $max_skill,
-            'max_condition' => $max_condition,
-            'max_queue' => $max_queue,
+            'id' => $options,
+//            'max_agent' => $max_agent,
+//            'max_skill' => $max_skill,
+//            'max_condition' => $max_condition,
+//            'max_queue' => $max_queue,
             'remark' => $options['remark']
         ));
         $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_CHANNEL, array(), $data);
@@ -575,5 +578,480 @@ class CallCenter extends Version
         );
     }
 
+    /**
+     * 解散交谈
+     * @param $conversation_id
+     * @return array
+     * @throws OptionsException
+     */
+    public function deleteConversation($conversation_id = '')
+    {
+        if (empty($conversation_id)) {
+            throw new OptionsException('交谈Id必填');
+        }
+        $response = $this->request('DELETE', $this->getBaseUrl() . self::CALLCENTER_CONVERSATION . "/" . $conversation_id, array(), array());
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
 
+    /**
+     * 设置呼叫听说模式
+     * @param $conversation_id
+     * @param $agent_name
+     * @param int $mode
+     * @return array
+     * @throws OptionsException
+     */
+    public function setConversationMode($conversation_id = '', $agent_name = '', $mode = 1)
+    {
+        if (empty($conversation_id)) {
+            throw new OptionsException('交谈Id必填');
+        }
+        if (empty($agent_name)) {
+            throw new OptionsException('坐席名称必填');
+        }
+        $data = array(
+            'mode' => $mode
+        );
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_CONVERSATION . "/" . $conversation_id . "/agent/" . $agent_name . "/lsm", array(), $data);
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 邀请坐席加入
+     * @param $conversation_id
+     * @param $enqueue
+     * @param int $mode
+     * @return array
+     * @throws OptionsException
+     */
+    public function setConversationInviteAgent($conversation_id = '', $enqueue, $mode = 1)
+    {
+        if (empty($conversation_id)) {
+            throw new OptionsException('交谈Id必填');
+        }
+        if (empty($agent_name)) {
+            throw new OptionsException('坐席名称必填');
+        }
+        // {BASE_URL}/callcenter/conversation/{conversation_id}/invite_agent
+        $data = array(
+            'enqueue' => $enqueue,
+            'mode' => $mode
+        );
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_CONVERSATION . "/" . $conversation_id . "/invite_agent", array(), $data);
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 邀请外线加入
+     * @param string $conversation_id
+     * @param string $to
+     * @param string $max_answer_seconds
+     * @param array $options
+     * @return array
+     * @throws OptionsException
+     */
+    public function setConversationInviteOut($conversation_id = '', $to = '', $max_answer_seconds = '', $options = array())
+    {
+        if (empty($conversation_id)) {
+            throw new OptionsException('交谈Id必填');
+        }
+        if (empty($to)) {
+            throw new OptionsException('外线号码必填');
+        }
+        if (empty($max_answer_seconds)) {
+            throw new OptionsException('最长通话时间必填');
+        }
+        $conversation = ConversationOptions::out();
+        $options = array_merge($conversation->getOptions(), $options);
+        $options = new Values($options);
+        $data = Values::of(array(
+            'to' => $to,
+            'from' => $options['from'],
+            'max_dial_seconds' => $options['max_dial_seconds'],
+            'max_answer_seconds' => $max_answer_seconds,
+            'mode' => $options['mode']
+        ));
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_CONVERSATION . "/" . $conversation_id . "/invite_out", array(), $data);
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 获取交谈单条记录
+     * @param $conversation_id
+     * @return array
+     * @throws OptionsException
+     */
+    public function findConversation($conversation_id)
+    {
+        if (empty($conversation_id)) {
+            throw new OptionsException('交谈Id必填');
+        }
+        $response = $this->request('GET', $this->getBaseUrl() . self::CALLCENTER_CONVERSATION . "/" . $conversation_id, array(), array());
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 获取交谈列表
+     * @return array
+     * @throws OptionsException
+     */
+    public function findAllConversation()
+    {
+        if (empty($conversation_id)) {
+            throw new OptionsException('交谈Id必填');
+        }
+        $response = $this->request('GET', $this->getBaseUrl() . self::CALLCENTER_CONVERSATION, array(), array());
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 坐席拒绝排队任务
+     * @param string $agent_name
+     * @param string $queue_id
+     * @param string $options
+     * @return array
+     * @throws OptionsException
+     */
+    public function setAgentRejectTask($agent_name = '', $queue_id = '', $options = '')
+    {
+        if (empty($agent_name)) {
+            throw new OptionsException('坐席名称必填');
+        }
+        if (empty($queue_id)) {
+            throw new OptionsException('排队任务Id必填');
+        }
+        $data = array(
+            'data' => $options
+        );
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_AGENT, array(), $data);
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+
+    /**
+     * 坐席呼叫外线
+     * @param string $agent_name
+     * @param string $to
+     * @param string $max_answer_seconds
+     * @param array $options
+     * @return array
+     * @throws OptionsException
+     */
+    public function setAgentCallOut($agent_name = '', $to = '', $max_answer_seconds = '', $options = array())
+    {
+        if (empty($agent_name)) {
+            throw new OptionsException('坐席名称必填');
+        }
+        if (empty($to)) {
+            throw new OptionsException('外线号码必填');
+        }
+        if (empty($max_answer_seconds)) {
+            throw new OptionsException('最长通话时间必填');
+        }
+        $agent = AgentOptions::out();
+        $options = array_merge($agent->getOptions(), $options);
+        $options = new Values($options);
+        $data = Values::of(array(
+            'to' => $to,
+            'from' => $options['from'],
+            'max_dial_seconds' => $options['max_dial_seconds'],
+            'max_answer_seconds' => $max_answer_seconds,
+            'mode' => $options['mode']
+        ));
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_AGENT . "/" . $agent_name . "/call_out", array(), $data);
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 呼叫其它坐席
+     * @param string $agent_name
+     * @param string $enqueue
+     * @return array
+     * @throws OptionsException
+     */
+    public function setAgentCallAgent($agent_name = '', $enqueue = '')
+    {
+        if (empty($agent_name)) {
+            throw new OptionsException('坐席名称必填');
+        }
+        if (empty($enqueue)) {
+            throw new OptionsException('目标坐席选择条件');
+        }
+        $data = array(
+            'enqueue' => $enqueue
+        );
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_AGENT . "/" . $agent_name . "/call_agent", array(), $data);
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 前转到其它坐席
+     * @param string $agent_name
+     * @param string $queue_task_id
+     * @param string $enqueue
+     * @return array
+     * @throws OptionsException
+     */
+    public function setAgentFwdAgent($agent_name = '', $queue_task_id = '', $enqueue = '')
+    {
+        if (empty($agent_name)) {
+            throw new OptionsException('坐席名称必填');
+        }
+        if(empty($queue_task_id)){
+            throw new OptionsException('');
+        }
+        if (empty($enqueue)) {
+            throw new OptionsException('目标坐席选择条件');
+        }
+        $data = array(
+            'queue_task_id' => $queue_task_id,
+            'enqueue' =>$enqueue
+        );
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_AGENT . "/" . $agent_name . "/fwd_agent", array(), $data);
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 后转到其它坐席
+     * @param string $agent_name
+     * @param string $conversation_id
+     * @param string $enqueue
+     * @return array
+     * @throws OptionsException
+     */
+    public function setAgentXferAgent($agent_name = '', $conversation_id = '', $enqueue = '')
+    {
+        if (empty($agent_name)) {
+            throw new OptionsException('坐席名称必填');
+        }
+        if(empty($conversation_id)){
+            throw new OptionsException('');
+        }
+        if (empty($enqueue)) {
+            throw new OptionsException('目标坐席选择条件');
+        }
+        $data = array(
+            'conversation_id' => $conversation_id,
+            'enqueue' =>$enqueue
+        );
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_AGENT . "/" . $agent_name . "/xfer_agent", array(), $data);
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 后转到外线
+     * @param string $agent_name
+     * @param string $conversation_id
+     * @param string $to
+     * @param string $max_answer_seconds
+     * @param array $options
+     * @return array
+     * @throws OptionsException
+     */
+    public function setAgentXferOut($agent_name = '', $conversation_id = '', $to = '', $max_answer_seconds = '', $options= array())
+    {
+        if (empty($agent_name)) {
+            throw new OptionsException('坐席名称必填');
+        }
+        if(empty($conversation_id)){
+            throw new OptionsException('交谈Id必填');
+        }
+        if (empty($to)) {
+            throw new OptionsException('外线号码必填');
+        }
+        if (empty($max_answer_seconds)) {
+            throw new OptionsException('最长通话时间必填');
+        }
+        $agent = AgentOptions::out();
+        $options = array_merge($agent->getOptions(), $options);
+        $options = new Values($options);
+        $data = Values::of(array(
+            'conversation_id' =>$conversation_id,
+            'to' => $to,
+            'from' => $options['from'],
+            'max_dial_seconds' => $options['max_dial_seconds'],
+            'max_answer_seconds' => $max_answer_seconds,
+            'mode' => $options['mode']
+        ));
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_AGENT . "/" . $agent_name . "/xfer_out", array(), $data);
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 设置坐席听说模式
+     * @param string $agent_name
+     * @param string $conversation_id
+     * @param int $mode
+     * @return array
+     * @throws OptionsException
+     */
+    public function setAgentMode($agent_name = '',$conversation_id = '',$mode = 1){
+        if (empty($agent_name)) {
+            throw new OptionsException('坐席名称必填');
+        }
+        if(empty($conversation_id)){
+            throw new OptionsException('交谈Id必填');
+        }
+        $data = array(
+            'conversation_id' =>$conversation_id,
+            'mode' =>$mode
+        );
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_AGENT . "/" . $agent_name . "/lsm", array(), $data);
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 坐席加入交谈
+     * @param string $agent_name
+     * @param string $conversation_id
+     * @param int $mode
+     * @return array
+     * @throws OptionsException
+     */
+    public function setAgentEnter($agent_name = '',$conversation_id = '',$mode = 1,$holding = true){
+        if (empty($agent_name)) {
+            throw new OptionsException('坐席名称必填');
+        }
+        if(empty($conversation_id)){
+            throw new OptionsException('交谈Id必填');
+        }
+        $data = array(
+            'conversation_id' =>$conversation_id,
+            'mode' =>$mode,
+            'holding' =>$holding
+        );
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_AGENT . "/" . $agent_name . "/enter", array(), $data);
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 坐席退出交谈
+     * @param string $agent_name
+     * @param string $conversation_id
+     * @return array
+     * @throws OptionsException
+     */
+    public function setAgentOut($agent_name = '',$conversation_id = ''){
+        if (empty($agent_name)) {
+            throw new OptionsException('坐席名称必填');
+        }
+        if(empty($conversation_id)){
+            throw new OptionsException('交谈Id必填');
+        }
+        $data = array(
+            'conversation_id' =>$conversation_id
+        );
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_AGENT . "/" . $agent_name . "/exit", array(), $data);
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 坐席合并交谈
+     * @param string $agent_name
+     * @param string $src_conversation_id
+     * @param string $dst_conversation_id
+     * @param int $mode
+     * @return array
+     * @throws OptionsException
+     */
+    public function setAgentMerge($agent_name = '',$src_conversation_id = '',$dst_conversation_id = '',$mode = 1){
+        if (empty($agent_name)) {
+            throw new OptionsException('坐席名称必填');
+        }
+        if(empty($src_conversation_id)){
+            throw new OptionsException('被合并的源头交谈必填');
+        }
+        if(empty($dst_conversation_id)){
+            throw new OptionsException('被合并的目标交谈');
+        }
+        $data = array(
+            'src_conversation_id' => $src_conversation_id,
+            'dst_conversation_id' => $dst_conversation_id,
+            'mode' => $mode
+        );
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_AGENT . "/" . $agent_name . "/merge", array(), $data);
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 获取坐席所在交谈列表
+     * @param string $agent_name
+     * @return array
+     * @throws OptionsException
+     */
+    public function findAgentConversation($agent_name = ''){
+        if (empty($agent_name)) {
+            throw new OptionsException('坐席名称必填');
+        }
+        $response = $this->request('GET', $this->getBaseUrl() . self::CALLCENTER_AGENT . "/" . $agent_name . "/conversation", array(), array());
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
 }

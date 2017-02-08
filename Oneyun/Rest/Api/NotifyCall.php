@@ -35,7 +35,6 @@ class NotifyCall extends Version
             throw new OptionsException('动态播放内容必填');
         }
 
-
         //初始化默认值
         $notifyCall =  NotifyCallOptions::create();
 

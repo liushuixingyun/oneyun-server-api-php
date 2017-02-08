@@ -51,7 +51,7 @@ $res = $oneyun->callcenter->findAllExt($pageNo,$pageSize);
 
 ## 坐席
 
-### 坐席登录
+### 坐席登录 [ok]
 ```php
 $res = $oneyun->callcenter->agentLogin($name,$channel,$extension,$options);
 ```
@@ -61,7 +61,7 @@ $res = $oneyun->callcenter->agentLogin($name,$channel,$extension,$options);
 $res = $oneyun->callcenter->agentLogout($name = '',$force = false);
 ```
 
-### 坐席报到
+### 坐席报到 
 ```php
 $res = $oneyun->callcenter->agentKeep($name = '');
 ```
@@ -76,17 +76,17 @@ $res = $oneyun->callcenter->findAgent($name = '');
 $res = $oneyun->callcenter->findAllAgent($pageNo = 1,$pageSize = 10);
 ```
 
-### 设置坐席分机 
+### 设置坐席分机 [ok]
 ```php
 $res = $oneyun->callcenter->setAgentExt($agent_name,$ext_id )
 ```
 
-### 设置坐席状态 
+### 设置坐席状态 [ok]
 ```php
 $res = $oneyun->callcenter->setAgentState($agent_name,$state);
 ```
 
-### 设置坐席技能 
+### 设置坐席技能 [ok]
 ```php
 $res = $oneyun->callcenter->setAgentSkills($agent_name,$opts);
 
@@ -141,13 +141,104 @@ $res = $oneyun->callcenter->editCondition($condition_id,$channe,$where,$options)
 
 ### 获取单条排队条件 [ok]
 ```php
-$res = $oneyun->callcenter->findChannel($channel_id);
+$res = $oneyun->callcenter->findCondition($channel_id);
 ```
 
 ### 获取多条排队条件 [ok]
 ```php
 $res = $oneyun->callcenter->findAllCondition();
 ```
+
+## 交谈
+
+### 解散交谈
+```php
+$res = $oneyun->callcenter->deleteConversation($conversation_id);
+```
+
+### 设置呼叫听说模式
+```php
+$res = $oneyun->callcenter->setConversationMode($conversation_id,$agent_name,$mode);
+```
+
+### 邀请坐席加入
+```php
+$res = $oneyun->callcenter->setConversationInviteAgent($conversation_id,$enqueue,$mode);
+```
+
+### 邀请外线加入
+```php
+$res = $oneyun->callcenter->setConversationInviteOut($conversation_id,$to,$max_answer_seconds,$options);
+```
+
+### 获取交谈单条记录 
+```php
+$res = $oneyun->callcenter->findConversation($conversation_id);
+```
+
+### 获取交谈列表
+```php
+$res = $oneyun->callcenter->findAllConversation();
+```
+
+## 坐席操作
+
+### 坐席拒绝排队任务
+```php
+$res = $oneyun->callcenter->setAgentRejectTask($agent_name,$queue_id,$data);
+```
+
+### 呼叫外线
+```php
+$res = $oneyun->callcenter->setAgentCallOut($agent_name,$to,$max_answer_seconds,$options);
+```
+
+### 呼叫其它坐席
+```php
+$res = $oneyun->callcenter->setAgentCallAgent($agent_name,$enqueue);
+```
+
+### 前转到其它坐席
+```php
+$res = $oneyun->callcenter->setAgentFwdAgent($agent_name,$queue_task_id,$enqueue);
+```
+
+### 后转到其它坐席
+```php
+$res = $oneyun->callcenter->setAgentXferAgent($agent_name,$conversation_id,$enqueue);
+```
+
+### 后转到外线
+```php
+$res = $oneyun->callcenter->setAgentXferOut($agent_name,$conversation_id,$to,$max_answer_seconds,$options);
+```
+
+### 设置听说模式
+```php
+$res = $oneyun->callcenter->setAgentMode($agent_name,$conversation_id,$mode);
+```
+
+### 坐席加入交谈
+```php
+$res = $oneyun->callcenter->setAgentEnter($agent_name,$conversation_id,$mode,$holding);
+```
+
+### 坐席退出交谈
+```php
+$res = $oneyun->callcenter->setAgentOut($agent_name,$conversation_id);
+```
+
+### 合并交谈
+```php
+$res = $oneyun->callcenter->setAgentMerge($agent_name,$src_conversation_id,$dst_conversation_id,$mode);
+```
+
+### 获取坐席所在交谈列表
+```php
+$res = $oneyun->callcenter->findAgentConversation($agent_name);
+```
+
+
 
 
 
