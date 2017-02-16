@@ -215,7 +215,7 @@ class CallCenter extends Version
      * @param $pageSize
      * @return array
      */
-    public function findAllAgent($pageNo, $pageSize)
+    public function findAllAgent($pageNo = 1, $pageSize = 20)
     {
         $params = array(
             'pageNo' => $pageNo,
@@ -315,7 +315,7 @@ class CallCenter extends Version
      * @throws OptionsException
      */
     // public function createChannel($max_agent,$max_skill,$max_condition,,$options)
-    public function createChannel($id, $options)
+    public function createChannel($options = array())
     {
 //        if (empty($max_agent)) {
 //            throw new OptionsException('工作通道所容纳的最大坐席数量必填');
@@ -334,7 +334,7 @@ class CallCenter extends Version
         $options = new Values($options);
 
         $data = Values::of(array(
-            'id' => $options,
+//            'id' => $options,
 //            'max_agent' => $max_agent,
 //            'max_skill' => $max_skill,
 //            'max_condition' => $max_condition,
@@ -717,9 +717,7 @@ class CallCenter extends Version
      */
     public function findAllConversation()
     {
-        if (empty($conversation_id)) {
-            throw new OptionsException('交谈Id必填');
-        }
+
         $response = $this->request('GET', $this->getBaseUrl() . self::CALLCENTER_CONVERSATION, array(), array());
         return array(
             'statusCode' => $response->getStatusCode(),

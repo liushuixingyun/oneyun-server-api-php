@@ -53,22 +53,22 @@ $res = $oneyun->callcenter->findAllExt($pageNo,$pageSize);
 
 ### 坐席登录 [ok]
 ```php
-$res = $oneyun->callcenter->agentLogin($name,$channel,$extension,$options);
+$res = $oneyun->callcenter->agentLogin($agent_name,$channel,$extension,$options);
 ```
 
 ### 坐席注销
 ```php
-$res = $oneyun->callcenter->agentLogout($name = '',$force = false);
+$res = $oneyun->callcenter->agentLogout($agent_name = '',$force = false);
 ```
 
 ### 坐席报到 
 ```php
-$res = $oneyun->callcenter->agentKeep($name = '');
+$res = $oneyun->callcenter->agentKeep($agent_name = '');
 ```
 
 ### 获取单个坐席信息 [ok]
 ```php
-$res = $oneyun->callcenter->findAgent($name = '');
+$res = $oneyun->callcenter->findAgent($agent_name = '');
 ```
 
 ### 获取坐席信息列表 [ok]
@@ -131,7 +131,7 @@ $res = $oneyun->callcenter->createCondition($channe,$where,$options);
 
 ### 删除排队条件 [ok]
 ```php
-$res = $oneyun->callcenter->deleteChannel($channel_id);
+$res = $oneyun->callcenter->deleteCondition($condition_id);
 ```
 
 ### 修改排队条件 [ok]
@@ -141,7 +141,7 @@ $res = $oneyun->callcenter->editCondition($condition_id,$channe,$where,$options)
 
 ### 获取单条排队条件 [ok]
 ```php
-$res = $oneyun->callcenter->findCondition($channel_id);
+$res = $oneyun->callcenter->findCondition($condition_id);
 ```
 
 ### 获取多条排队条件 [ok]
@@ -151,7 +151,7 @@ $res = $oneyun->callcenter->findAllCondition();
 
 ## 交谈
 
-### 解散交谈
+### 
 ```php
 $res = $oneyun->callcenter->deleteConversation($conversation_id);
 ```
@@ -188,12 +188,12 @@ $res = $oneyun->callcenter->findAllConversation();
 $res = $oneyun->callcenter->setAgentRejectTask($agent_name,$queue_id,$data);
 ```
 
-### 呼叫外线
+### 坐席呼叫外线
 ```php
 $res = $oneyun->callcenter->setAgentCallOut($agent_name,$to,$max_answer_seconds,$options);
 ```
 
-### 呼叫其它坐席
+### 坐席呼叫其它坐席
 ```php
 $res = $oneyun->callcenter->setAgentCallAgent($agent_name,$enqueue);
 ```
