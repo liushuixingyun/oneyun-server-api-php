@@ -10,7 +10,6 @@ class CallCenter extends Version
 {
     const CALLCENTER_EXTENSION = "callcenter/extension"; // 分机
     const CALLCENTER_AGENT = "callcenter/agent"; // 坐席
-    const CALLCENTER_CHANNEL = "callcenter/channel"; // 通道
     const CALLCENTER_CONDITION = "callcenter/condition"; // 排队
     const CALLCENTER_CONVERSATION = "callcenter/conversation"; // 交谈
 
@@ -298,151 +297,6 @@ class CallCenter extends Version
     }
 
     /**
-     * 新建通道
-     * @param $max_agent
-     * @param $max_skill
-     * @param $max_condition
-     * @param $max_queue
-     * @param $options
-     * @return array
-     * @throws OptionsException
-     */
-    // public function createChannel($max_agent,$max_skill,$max_condition,,$options)
-    public function createChannel($options = array())
-    {
-//        if (empty($max_agent)) {
-//            throw new OptionsException('工作通道所容纳的最大坐席数量必填');
-//        }
-//        if (empty($max_skill)) {
-//            throw new OptionsException('工作通道所容纳的最大技能数量必填');
-//        }
-//        if (empty($max_condition)) {
-//            throw new OptionsException('工作通道所容纳的最大排队条件设置数量必填');
-//        }
-//        if (empty($max_queue)) {
-//            throw new OptionsException('工作通道所容纳的最大排队任务数量必填');
-//        }
-        $channel = ChannelOptions::create();
-        $options = array_merge($channel->getOptions(), $options);
-        $options = new Values($options);
-
-        $data = Values::of(array(
-//            'id' => $options,
-//            'max_agent' => $max_agent,
-//            'max_skill' => $max_skill,
-//            'max_condition' => $max_condition,
-//            'max_queue' => $max_queue,
-            'remark' => $options['remark']
-        ));
-        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_CHANNEL, array(), $data);
-        return array(
-            'statusCode' => $response->getStatusCode(),
-            'headers' => $response->getHeaders(),
-            'content' => $response->getContent()
-        );
-    }
-
-    /**
-     * 删除通道
-     * @param $channel_id
-     * @return array
-     * @throws OptionsException
-     */
-    public function deleteChannel($channel_id)
-    {
-        if (empty($channel_id)) {
-            throw new OptionsException('通道Id必填');
-        }
-        $response = $this->request('DELETE', $this->getBaseUrl() . self::CALLCENTER_CHANNEL . "/" . $channel_id, array(), array());
-        return array(
-            'statusCode' => $response->getStatusCode(),
-            'headers' => $response->getHeaders(),
-            'content' => $response->getContent()
-        );
-    }
-
-    /**
-     * 修改通道
-     * @param $max_agent
-     * @param $max_skill
-     * @param $max_condition
-     * @param $max_queue
-     * @param $options
-     * @return array
-     * @throws OptionsException
-     */
-    public function editChannel($channel_id, $max_agent, $max_skill, $max_condition, $max_queue, $options)
-    {
-        if (empty($channel_id)) {
-            throw new OptionsException('通道Id必填');
-        }
-        if (empty($max_agent)) {
-            throw new OptionsException('工作通道所容纳的最大坐席数量必填');
-        }
-        if (empty($max_skill)) {
-            throw new OptionsException('工作通道所容纳的最大技能数量必填');
-        }
-        if (empty($max_condition)) {
-            throw new OptionsException('工作通道所容纳的最大排队条件设置数量必填');
-        }
-        if (empty($max_queue)) {
-            throw new OptionsException('工作通道所容纳的最大排队任务数量必填');
-        }
-        $channel = ChannelOptions::create();
-        $options = array_merge($channel->getOptions(), $options);
-        $options = new Values($options);
-
-        $data = Values::of(array(
-            'max_agent' => $max_agent,
-            'max_skill' => $max_skill,
-            'max_condition' => $max_condition,
-            'max_queue' => $max_queue,
-            'remark' => $options['remark']
-        ));
-
-
-        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_CHANNEL . "/" . $channel_id, array(), $data);
-        return array(
-            'statusCode' => $response->getStatusCode(),
-            'headers' => $response->getHeaders(),
-            'content' => $response->getContent()
-        );
-    }
-
-    /**
-     * 获取单条通道记录
-     * @param $channel_id
-     * @return array
-     * @throws OptionsException
-     */
-    public function findChannel($channel_id)
-    {
-        if (empty($channel_id)) {
-            throw new OptionsException('通道Id必填');
-        }
-        $response = $this->request('GET', $this->getBaseUrl() . self::CALLCENTER_CHANNEL . "/" . $channel_id, array(), array());
-        return array(
-            'statusCode' => $response->getStatusCode(),
-            'headers' => $response->getHeaders(),
-            'content' => $response->getContent()
-        );
-    }
-
-    /**
-     * 获取多条通道记录
-     * @return array
-     */
-    public function findAllChannel()
-    {
-        $response = $this->request('GET', $this->getBaseUrl() . self::CALLCENTER_CHANNEL, array(), array());
-        return array(
-            'statusCode' => $response->getStatusCode(),
-            'headers' => $response->getHeaders(),
-            'content' => $response->getContent()
-        );
-    }
-
-    /**
      * 新建排队条件
      * @param $where
      * @param $queue_timeout
@@ -465,7 +319,7 @@ class CallCenter extends Version
             'where' => $where,
             'sort' => $options['sort'],
             'priority' => $options['priority'],
-            'queue_timeout' => $options['queue_timeout'],
+            'queue_timeout' => $queue_timeout,
             'fetch_timeout' => $options['fetch_timeout'],
             'remark' => $options['remark']
         ));
