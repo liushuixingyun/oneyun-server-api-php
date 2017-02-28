@@ -33,7 +33,6 @@ class CallCenter extends Version
         $extension = ExtensionOptions::create();
         $options = array_merge($extension->getOptions(), $options);
         $options = new Values($options);
-
         $data = Values::of(array(
             'type' => $options['type'],
             'user' => $options['user'],
@@ -111,19 +110,15 @@ class CallCenter extends Version
     /**
      * 登录坐席
      * @param null $name
-     * @param null $channel
      * @param $extension
      * @param $options
      * @return array
      * @throws OptionsException
      */
-    public function agentLogin($name, $channel, $extension, $options)
+    public function agentLogin($name, $extension, $options)
     {
         if (empty($name)) {
             throw new OptionsException('登录必填');
-        }
-        if (empty($channel)) {
-            throw new OptionsException('通道必填');
         }
         if (empty($extension)) {
             throw new OptionsException('坐席的分机必填');
@@ -131,10 +126,8 @@ class CallCenter extends Version
         $agent = AgentOptions::create();
         $options = array_merge($agent->getOptions(), $options);
         $options = new Values($options);
-
         $data = Values::of(array(
             'name' => $name,
-            'channel' => $channel,
             'num' => $options['num'],
             'state' => $options['state'],
             'skills' => $options['skills'],
@@ -451,27 +444,24 @@ class CallCenter extends Version
 
     /**
      * 新建排队条件
-     * @param $channe
      * @param $where
+     * @param $queue_timeout
      * @param $options
      * @return array
      * @throws OptionsException
      */
-    public function createCondition($channe, $where, $options = array())
+    public function createCondition($where = '', $queue_timeout = 0,$options = array())
     {
-        if (empty($channe)) {
-            throw new OptionsException('通道Id必填');
-        }
         if (empty($where)) {
             throw new OptionsException('条件表达式必填');
         }
-
-        $channel = ConditionOptions::create();
-        $options = array_merge($channel->getOptions(), $options);
+        if ($queue_timeout == 0) {
+            throw new OptionsException('排队等待超时时间必填');
+        }
+        $condition = ConditionOptions::create();
+        $options = array_merge($condition->getOptions(), $options);
         $options = new Values($options);
-
         $data = Values::of(array(
-            'channel' => $channe,
             'where' => $where,
             'sort' => $options['sort'],
             'priority' => $options['priority'],
@@ -508,28 +498,24 @@ class CallCenter extends Version
 
     /**
      * 修改排队条件
-     * @param $channe
-     * @param $where
-     * @param $options
+     * @param string $condition_id
+     * @param string $where
+     * @param array $options
      * @return array
      * @throws OptionsException
      */
-    public function editCondition($condition_id, $channe, $where, $options)
+    public function editCondition($condition_id = '', $where = '', $options = array())
     {
         if (empty($condition_id)) {
             throw new OptionsException('条件Id必填');
         }
-        if (empty($channe)) {
-            throw new OptionsException('通道Id必填');
-        }
         if (empty($where)) {
             throw new OptionsException('条件表达式必填');
         }
-        $channel = ConditionOptions::create();
-        $options = array_merge($channel->getOptions(), $options);
+        $condition = ConditionOptions::create();
+        $options = array_merge($condition->getOptions(), $options);
         $options = new Values($options);
         $data = Values::of(array(
-            'channel' => $channe,
             'where' => $where,
             'sort' => $options['sort'],
             'priority' => $options['priority'],
@@ -537,7 +523,7 @@ class CallCenter extends Version
             'fetch_timeout' => $options['fetch_timeout'],
             'remark' => $options['remark']
         ));
-        $response = $this->request('DELETE', $this->getBaseUrl() . self::CALLCENTER_CONDITION . "/" . $condition_id, array(), $data);
+        $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_CONDITION . "/" . $condition_id, array(), $data);
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),

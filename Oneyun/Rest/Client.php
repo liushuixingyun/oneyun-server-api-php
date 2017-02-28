@@ -185,6 +185,10 @@ Class Client
         return $this->apiUrl;
     }
 
+    public function getManagement(){
+        return $this->api->management;
+    }
+
     public function __get($name)
     {
         $method = 'get' . ucfirst($name);

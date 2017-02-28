@@ -8,16 +8,15 @@ abstract class AgentOptions
 {
     /**
      * @param null $name
-     * @param null $channel
      * @param null $num
      * @param null $state
      * @param array $skills
      * @param null $extension
      * @return CreateAgentOptions
      */
-    public static function create($name = null, $channel = null, $num = null, $state = null, $skills = array(),$extension = null)
+    public static function create($name = null, $num = null, $state = null, $skills = array(),$extension = null)
     {
-        return new CreateAgentOptions($name, $channel, $num, $state, $skills,$extension);
+        return new CreateAgentOptions($name, $num, $state, $skills,$extension);
     }
 
     public static function out($from = null, $max_dial_seconds = null, $mode = 4)
@@ -29,10 +28,9 @@ abstract class AgentOptions
 
 class CreateAgentOptions extends Options
 {
-    public function __construct($name = Values::NONE, $channel = Values::NONE, $num = Values::NONE, $state = Values::NONE, $skills = Values::NONE, $extension = Values::NONE)
+    public function __construct($name = Values::NONE,$num = Values::NONE, $state = Values::NONE, $skills = Values::NONE, $extension = Values::NONE)
     {
         $this->options['name'] = $name;
-        $this->options['channel'] = $channel;
         $this->options['num'] = $num;
         $this->options['state'] = $state;
         $this->options['skills'] = $skills;

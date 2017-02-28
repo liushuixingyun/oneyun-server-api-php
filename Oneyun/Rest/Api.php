@@ -12,11 +12,13 @@ class Api extends Domain
     protected $_notifyCall;
     protected $_ivrCall;
     protected $_callCenter;
+    protected $_managerment;
 
     public function __construct(Client $client)
     {
         parent::__construct($client);
     }
+
 
     protected function getCall()
     {
@@ -58,6 +60,13 @@ class Api extends Domain
         return $this->_callCenter;
     }
 
+
+    protected function getManagement(){
+        if (!$this->_managerment) {
+            $this->_managerment = new Api\Management\Management($this);
+        }
+        return $this->_managerment;
+    }
 
     public function __get($name)
     {
