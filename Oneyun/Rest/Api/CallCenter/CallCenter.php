@@ -622,7 +622,8 @@ class CallCenter extends Version
             'from' => $options['from'],
             'max_dial_seconds' => $options['max_dial_seconds'],
             'max_answer_seconds' => $max_answer_seconds,
-            'mode' => $options['mode']
+            'mode' => $options['mode'],
+            'user_data'=>$options['user_data']
         ));
         $response = $this->request('POST', $this->getBaseUrl() . self::CALLCENTER_AGENT . "/" . $agent_name . "/call_out", array(), $data);
         return array(
