@@ -173,6 +173,10 @@ Class Client
         return $this->httpClient;
     }
 
+    /**
+     * 呼叫中心
+     * @return mixed
+     */
     public function getCallCenter(){
         return $this->api->callCenter;
     }
@@ -185,8 +189,20 @@ Class Client
         return $this->apiUrl;
     }
 
+    /**
+     * 管理API
+     * @return mixed
+     */
     public function getManagement(){
         return $this->api->management;
+    }
+
+    /**
+     * 消息API
+     * @return mixed
+     */
+    public function getMsg(){
+        return $this->api->msg;
     }
 
     public function __get($name)

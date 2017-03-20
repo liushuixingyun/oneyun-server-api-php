@@ -88,7 +88,7 @@ class Management extends Version
      * @param int $pageSize
      * @return array
      */
-    public function findAllSubAccount($pageNo = 1, $pageSize = 10)
+    public function findAllSubAccount($pageNo = 1, $pageSize = 20)
     {
         $data = array(
             'pageNo' => $pageNo,
@@ -143,5 +143,77 @@ class Management extends Version
             'content' => $response->getContent()
         );
     }
+
+    /**
+     * 查询号码列表
+     * @param int $pageNo
+     * @param int $pageSize
+     * @return array
+     */
+    public function findAllTelNum($pageNo = 1, $pageSize = 20)
+    {
+        $data = array(
+            'pageNo' => $pageNo,
+            'pageSize' => $pageSize
+        );
+        $response = $this->request('GET ', $this->getBaseUrl() . self::MANAGEMENT_TELNUM, $data, array());
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+
+    /**
+     * 号码绑定子账号
+     * @param null $id
+     * @param null $subaccountId
+     * @return array
+     * @throws OptionsException
+     */
+    public function bindTelNum($id = null, $subaccountId = null)
+    {
+        if (empty($id)) {
+            throw new OptionsException('请填写号码资源Id');
+        }
+        if (empty($subaccountId)) {
+            throw new OptionsException('请填写子帐号Id');
+        }
+
+        $response = $this->request('POST ', $this->getBaseUrl() . self::MANAGEMENT_TELNUM ."/". $id . "/subaccount", array(), array());
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+    /**
+     * 号码解绑子账号
+     * @param null $id
+     * @param null $subaccountId
+     * @return array
+     * @throws OptionsException
+     */
+    public function unBindTelNum($id = null, $subaccountId = null)
+    {
+        if (empty($id)) {
+            throw new OptionsException('请填写号码资源Id');
+        }
+        if (empty($subaccountId)) {
+            throw new OptionsException('请填写子帐号Id');
+        }
+
+        $response = $this->request('DELETE ', $this->getBaseUrl() . self::MANAGEMENT_TELNUM ."/". $id . "/subaccount", array(), array());
+        return array(
+            'statusCode' => $response->getStatusCode(),
+            'headers' => $response->getHeaders(),
+            'content' => $response->getContent()
+        );
+    }
+
+
+
 
 }
