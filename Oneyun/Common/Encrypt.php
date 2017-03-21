@@ -47,7 +47,7 @@ class Encrypt
 
         $contentType = $hasConent ? $contentType : '';
 
-        $sign = $method . "\n" . $contentMd5 . "\n" . $contentType . "\n" . $timestamp . "\n" . $appId . "\n" . $apiUrl;
+        $sign = trim($method) . "\n" . $contentMd5 . "\n" . $contentType . "\n" . $timestamp . "\n" . $appId . "\n" . trim($apiUrl);
 
         return $sign;
     }

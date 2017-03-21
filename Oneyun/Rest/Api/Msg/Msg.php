@@ -138,7 +138,7 @@ class Msg extends Version
             'pageNo' => $pageNo,
             'pageSize' => $pageSize
         );
-        $response = $this->request('GET ', $this->getBaseUrl() . self::MSG_TEMPLATE, $data, array());
+        $response = $this->request('GET', $this->getBaseUrl() . self::MSG_TEMPLATE, $data, array());
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
@@ -148,15 +148,15 @@ class Msg extends Version
 
     /**
      * 发送闪印
-     * @param $destPhone
+     * @param $mobile
      * @param $tempId
      * @param array $options
      * @return array
      * @throws OptionsException
      */
-    public function createUssd($destPhone, $tempId, $options = array())
+    public function createUssd($mobile, $tempId, $options = array())
     {
-        if (!$destPhone) {
+        if (!$mobile) {
             throw new OptionsException('目标号码（必须为移动号码）');
         }
         if (!$tempId) {
@@ -166,11 +166,11 @@ class Msg extends Version
         $options = array_merge($ussd->getOptions(), $options);
         $options = new Values($options);
         $data = Values::of(array(
-            'destPhone' => $destPhone,
+            'mobile' => $mobile,
             'tempId' => $tempId,
             'tempArgs' => $options['tempArgs']
         ));
-        $response = $this->request('POST ', $this->getBaseUrl() . self::MSG_USSD . "/send", $data, array());
+        $response = $this->request('POST', $this->getBaseUrl() . self::MSG_USSD . "/send", array(), $data);
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
@@ -180,16 +180,17 @@ class Msg extends Version
 
 
     /**
-     * 发送群发模板闪印任务
-     * @param $destPhone
-     * @param $tempId
+     * @param null $taskName
+     * @param null $tempId
+     * @param null $mobiles
+     * @param null $sendTime
      * @param array $options
      * @return array
      * @throws OptionsException
      */
-    public function createUssdTask($destPhone = null, $tempId = null, $mobiles = null, $sendTime = null, $options = array())
+    public function createUssdTask($taskName = null, $tempId = null, $mobiles = null, $sendTime = null, $options = array())
     {
-        if (!$destPhone) {
+        if (!$taskName) {
             throw new OptionsException('目标号码（必须为移动号码）');
         }
         if (!$tempId) {
@@ -205,13 +206,13 @@ class Msg extends Version
         $options = array_merge($ussd->getOptions(), $options);
         $options = new Values($options);
         $data = Values::of(array(
-            'destPhone' => $destPhone,
+            'taskName' => $taskName,
             'tempId' => $tempId,
             'tempArgs' => $options['tempArgs'],
             'mobiles' => $mobiles,
             'sendTime' => $sendTime,
         ));
-        $response = $this->request('POST ', $this->getBaseUrl() . self::MSG_USSD . "/mass/task", $data, array());
+        $response = $this->request('POST', $this->getBaseUrl() . self::MSG_USSD . "/mass/task", array(), $data);
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
@@ -240,15 +241,15 @@ class Msg extends Version
 
     /**
      * 发送短信
-     * @param $destPhone
+     * @param $mobile
      * @param $tempId
      * @param array $options
      * @return array
      * @throws OptionsException
      */
-    public function createSms($destPhone, $tempId, $options = array())
+    public function createSms($mobile = null, $tempId = null, $options = array())
     {
-        if (!$destPhone) {
+        if (!$mobile) {
             throw new OptionsException('目标号码（必须为移动号码）');
         }
         if (!$tempId) {
@@ -258,11 +259,11 @@ class Msg extends Version
         $options = array_merge($sms->getOptions(), $options);
         $options = new Values($options);
         $data = Values::of(array(
-            'destPhone' => $destPhone,
+            'mobile' => $mobile,
             'tempId' => $tempId,
             'tempArgs' => $options['tempArgs']
         ));
-        $response = $this->request('POST ', $this->getBaseUrl() . self::MSG_SMS . "/send", $data, array());
+        $response = $this->request('POST', $this->getBaseUrl() . self::MSG_SMS . "/send", array(), $data);
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
@@ -273,16 +274,18 @@ class Msg extends Version
 
     /**
      * 发送群发模板短信任务
-     * @param $destPhone
-     * @param $tempId
+     * @param null $taskName
+     * @param null $tempId
+     * @param null $mobiles
+     * @param null $sendTime
      * @param array $options
      * @return array
      * @throws OptionsException
      */
-    public function createSmsTask($destPhone = null, $tempId = null, $mobiles = null, $sendTime = null, $options = array())
+    public function createSmsTask($taskName = null, $tempId = null, $mobiles = null, $sendTime = null, $options = array())
     {
-        if (!$destPhone) {
-            throw new OptionsException('目标号码（必须为移动号码）');
+        if (!$taskName) {
+            throw new OptionsException('群发任务名称必填');
         }
         if (!$tempId) {
             throw new OptionsException('模板编号必填');
@@ -297,13 +300,13 @@ class Msg extends Version
         $options = array_merge($sms->getOptions(), $options);
         $options = new Values($options);
         $data = Values::of(array(
-            'destPhone' => $destPhone,
+            'taskName' => $taskName,
             'tempId' => $tempId,
             'tempArgs' => $options['tempArgs'],
             'mobiles' => $mobiles,
             'sendTime' => $sendTime,
         ));
-        $response = $this->request('POST ', $this->getBaseUrl() . self::MSG_SMS . "/mass/task", $data, array());
+        $response = $this->request('POST', $this->getBaseUrl() . self::MSG_SMS . "/mass/task", array(), $data);
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
@@ -322,14 +325,13 @@ class Msg extends Version
         if (!$msgKey) {
             throw new OptionsException('消息任务标识必填');
         }
-        $response = $this->request('GET ', $this->getBaseUrl() . self::MSG_SMS . "/" . $msgKey, array(), array());
+        $response = $this->request('GET', $this->getBaseUrl() . self::MSG_SMS . "/" . $msgKey, array(), array());
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
             'content' => $response->getContent()
         );
     }
-
 
 
 }
