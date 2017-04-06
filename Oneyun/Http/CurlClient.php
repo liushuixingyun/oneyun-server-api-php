@@ -119,15 +119,16 @@ class CurlClient implements Client
                 break;
             case 'put':
                 $options[CURLOPT_PUT] = true;
+//                $options[CURLOPT_POSTFIELDS] = json_encode($data);
                 if ($data) {
-                    if ($buffer = fopen('php://memory', 'w+')) {
+                    if ($buffer = fopen('php://temp', 'rw+')) {
                         $dataString = $this->buildQuery($data);
                         fwrite($buffer, $dataString);
-                        fseek($buffer, 0);
+                        rewind($buffer);
                         $options[CURLOPT_INFILE] = $buffer;
                         $options[CURLOPT_INFILESIZE] = strlen($dataString);
                     } else {
-                        throw new HttpException('Unable to open a temporary file');
+                        throw new EnvironmentException('Unable to open a temporary file');
                     }
                 }
                 break;

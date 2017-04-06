@@ -12,19 +12,20 @@ abstract class SubAccountOptions
      * @param array $quotas
      * @return CreateSubAccountOptions
      */
-    public static function create($callbackUrl = null, $remark = null, $quotas = array())
+    public static function create($callbackUrl = null, $remark = null, $quotas = array(), $enabled = 0)
     {
-        return new CreateSubAccountOptions($callbackUrl, $remark, $quotas);
+        return new CreateSubAccountOptions($callbackUrl, $remark, $quotas,$enabled);
     }
 }
 
 class CreateSubAccountOptions extends Options
 {
-    public function __construct($callbackUrl = Values::NONE, $remark = Values::NONE, $quotas = Values::NONE)
+    public function __construct($callbackUrl = Values::NONE, $remark = Values::NONE, $quotas = Values::NONE, $enabled = Values::NONE)
     {
         $this->options['callbackUrl'] = $callbackUrl;
         $this->options['remark'] = $remark;
         $this->options['quotas'] = $quotas;
+        $this->options['enabled'] = $enabled;
     }
 
     public function getOptions()

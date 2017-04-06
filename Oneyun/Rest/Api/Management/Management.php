@@ -53,9 +53,9 @@ class Management extends Version
         $data = Values::of(array(
             'callbackUrl' => $options['callbackUrl'],
             'remark' => $options['remark'],
-            'quotas' => $options['quotas'],
+            'enabled' => $options['enabled'],
         ));
-        $response = $this->request('PUT', $this->getBaseUrl() . self::MANAGEMENT_SUBACCOUNT . "/" . $id, array(), $data);
+        $response = $this->request('POST', $this->getBaseUrl() . self::MANAGEMENT_SUBACCOUNT . "/" . $id, array(), $data);
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
@@ -74,7 +74,7 @@ class Management extends Version
         if (!$id) {
             throw new OptionsException('请填写子帐号Id');
         }
-        $response = $this->request('DELETE ', $this->getBaseUrl() . self::MANAGEMENT_SUBACCOUNT . "/" . $id, array(), array());
+        $response = $this->request('DELETE', $this->getBaseUrl() . self::MANAGEMENT_SUBACCOUNT . "/" . $id, array(), array());
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
@@ -94,7 +94,7 @@ class Management extends Version
             'pageNo' => $pageNo,
             'pageSize' => $pageSize
         );
-        $response = $this->request('GET ', $this->getBaseUrl() . self::MANAGEMENT_SUBACCOUNT, $data, array());
+        $response = $this->request('GET', $this->getBaseUrl() . self::MANAGEMENT_SUBACCOUNT, $data, array());
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
@@ -113,7 +113,7 @@ class Management extends Version
         if (empty($id)) {
             throw new OptionsException('请填写子帐号Id');
         }
-        $response = $this->request('GET ', $this->getBaseUrl() . self::MANAGEMENT_SUBACCOUNT . "/" . $id, array(), array());
+        $response = $this->request('GET', $this->getBaseUrl() . self::MANAGEMENT_SUBACCOUNT . "/" . $id, array(), array());
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
@@ -124,19 +124,19 @@ class Management extends Version
     /**
      * 设置子账号配额
      * @param string $id
-     * @param array $options
+     * @param array $quotas
      * @return array
      * @throws OptionsException
      */
-    public function setSubAccountQuotas($id = '', $options = array())
+    public function setSubAccountQuotas($id = '', $quotas = array())
     {
         if (empty($id)) {
             throw new OptionsException('请填写子帐号Id');
         }
         $data = array(
-            'quotas' => $options
+            'quotas' => $quotas
         );
-        $response = $this->request('PUT ', $this->getBaseUrl() . self::MANAGEMENT_SUBACCOUNT . "/" . $id . "/quotas", array(), $data);
+        $response = $this->request('POST', $this->getBaseUrl() . self::MANAGEMENT_SUBACCOUNT . "/" . $id . "/quotas", array(), $data);
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
@@ -156,7 +156,7 @@ class Management extends Version
             'pageNo' => $pageNo,
             'pageSize' => $pageSize
         );
-        $response = $this->request('GET ', $this->getBaseUrl() . self::MANAGEMENT_TELNUM, $data, array());
+        $response = $this->request('GET', $this->getBaseUrl() . self::MANAGEMENT_TELNUM, $data, array());
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
@@ -181,7 +181,7 @@ class Management extends Version
             throw new OptionsException('请填写子帐号Id');
         }
 
-        $response = $this->request('POST ', $this->getBaseUrl() . self::MANAGEMENT_TELNUM ."/". $id . "/subaccount", array(), array());
+        $response = $this->request('POST', $this->getBaseUrl() . self::MANAGEMENT_TELNUM ."/". $id . "/subaccount", array(), array());
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
@@ -205,7 +205,7 @@ class Management extends Version
             throw new OptionsException('请填写子帐号Id');
         }
 
-        $response = $this->request('DELETE ', $this->getBaseUrl() . self::MANAGEMENT_TELNUM ."/". $id . "/subaccount", array(), array());
+        $response = $this->request('DELETE', $this->getBaseUrl() . self::MANAGEMENT_TELNUM ."/". $id . "/subaccount", array(), array());
         return array(
             'statusCode' => $response->getStatusCode(),
             'headers' => $response->getHeaders(),
